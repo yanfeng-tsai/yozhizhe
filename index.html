@@ -1,0 +1,2914 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover, maximum-scale=1"
+    />
+    <title>智慧居家 App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --ln-green: #06c755;
+        --ln-green-dark: #05b34c;
+        --ln-sidebar: #2b3139;
+        --ln-sidebar-hover: #343b45;
+        --ln-bg: #ffffff;
+        --ln-bg-soft: #f5f7fa;
+        --ln-text: #111111;
+        --ln-muted: #8f8f8f;
+        --ln-line: #ebebeb;
+        --ln-divider: #f0f0f0;
+
+        --owner-bg: var(--ln-green);
+        --owner-bg-hover: var(--ln-green-dark);
+        --owner-text: #ffffff;
+        --manager-bg: #eaf6ec;
+        --manager-border: #cbe8d5;
+        --device-bg: #f3f6f9;
+        --device-border: #dde3ea;
+
+        --header-chat: 52px;
+        --radius-lg: 16px;
+        --radius-sm: 4px;
+        --shadow-soft: 0 1px 2px rgba(0, 0, 0, 0.04);
+
+        font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        line-height: 1.4;
+        color: var(--ln-text);
+        background: #e8ebf1;
+      }
+
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        min-height: 100dvh;
+      }
+
+      /* ========== 手機 App 外框（瀏覽器中模擬） ========== */
+      .device-viewport {
+        min-height: 100vh;
+        min-height: 100dvh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: max(12px, env(safe-area-inset-top)) max(12px, env(safe-area-inset-right))
+          max(12px, env(safe-area-inset-bottom)) max(12px, env(safe-area-inset-left));
+        background: radial-gradient(120% 80% at 50% 0%, #dce3ef 0%, #b8c4d8 45%, #8f9eb5 100%);
+      }
+
+      .phone-frame {
+        width: min(402px, 100vw - 24px);
+        height: min(852px, 92dvh);
+        border-radius: 46px;
+        padding: 10px;
+        background: linear-gradient(160deg, #2a2a2e 0%, #0d0d0f 40%, #1a1a1f 100%);
+        box-shadow:
+          0 24px 60px rgba(0, 0, 0, 0.35),
+          0 0 0 1px rgba(255, 255, 255, 0.06) inset;
+        display: flex;
+        flex-direction: column;
+        flex-shrink: 0;
+      }
+
+      .phone-screen {
+        flex: 1;
+        min-height: 0;
+        border-radius: 36px;
+        overflow: hidden;
+        background: var(--ln-bg);
+        display: flex;
+        flex-direction: column;
+        position: relative;
+      }
+
+      .phone-statusbar {
+        position: relative;
+        z-index: 2;
+        flex-shrink: 0;
+        height: 36px;
+        padding: 10px 22px 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+        color: var(--ln-text);
+        background: var(--ln-bg);
+      }
+
+      .phone-statusbar__icons {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      .phone-notch {
+        position: absolute;
+        top: 8px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 120px;
+        height: 28px;
+        background: #0d0d0f;
+        border-radius: 20px;
+        z-index: 1;
+        pointer-events: none;
+      }
+
+      @media (max-width: 430px) {
+        .device-viewport {
+          padding: 0;
+          align-items: stretch;
+        }
+
+        .phone-frame {
+          width: 100%;
+          height: 100dvh;
+          min-height: 100dvh;
+          border-radius: 0;
+          padding: 0;
+          box-shadow: none;
+        }
+
+        .phone-screen {
+          border-radius: 0;
+        }
+
+        .phone-notch {
+          display: none;
+        }
+      }
+
+      button,
+      input,
+      textarea {
+        font: inherit;
+      }
+
+      /* --- 視圖切換 --- */
+      .app-shell {
+        flex: 1;
+        min-height: 0;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        background: var(--ln-bg);
+      }
+
+      .view {
+        display: none;
+        flex: 1;
+        min-height: 0;
+      }
+
+      .view.is-active {
+        display: flex;
+      }
+
+      /* ========== LINE 主畫面 ========== */
+      .view--home {
+        flex-direction: column;
+      }
+
+      .phone-screen .ln-sidebar {
+        display: none;
+      }
+
+      .app-tabbar {
+        flex-shrink: 0;
+        display: flex;
+        align-items: stretch;
+        justify-content: space-around;
+        gap: 4px;
+        padding: 6px 8px calc(10px + env(safe-area-inset-bottom));
+        background: var(--ln-bg);
+        border-top: 1px solid var(--ln-divider);
+        box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.04);
+      }
+
+      .app-tabbar button {
+        flex: 1;
+        border: none;
+        background: none;
+        padding: 6px 2px;
+        cursor: pointer;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+        font-size: 10px;
+        color: var(--ln-muted);
+        font-weight: 500;
+      }
+
+      .app-tabbar button.is-active {
+        color: var(--ln-text);
+        font-weight: 700;
+      }
+
+      .app-tabbar__icon {
+        font-size: 22px;
+        line-height: 1;
+      }
+
+      .ln-sidebar {
+        width: 56px;
+        flex-shrink: 0;
+        background: var(--ln-sidebar);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 10px 0 16px;
+        gap: 4px;
+      }
+
+      .ln-sidebtn {
+        width: 44px;
+        height: 44px;
+        border: none;
+        border-radius: 12px;
+        background: transparent;
+        color: #c5ccd6;
+        font-size: 20px;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+        position: relative;
+      }
+
+      .ln-sidebtn:hover {
+        background: var(--ln-sidebar-hover);
+        color: #fff;
+      }
+
+      .ln-sidebtn.is-selected {
+        color: #fff;
+        background: var(--ln-sidebar-hover);
+      }
+
+      .ln-sidebtn__badge {
+        position: absolute;
+        top: 2px;
+        right: 2px;
+        min-width: 18px;
+        height: 16px;
+        padding: 0 4px;
+        border-radius: 8px;
+        background: #ff334b;
+        color: #fff;
+        font-size: 9px;
+        font-weight: 700;
+        line-height: 16px;
+        text-align: center;
+      }
+
+      .ln-sidefill {
+        flex: 1;
+      }
+
+      .ln-main {
+        flex: 1;
+        min-width: 0;
+        min-height: 0;
+        display: none;
+        flex-direction: column;
+        background: var(--ln-bg);
+        position: relative;
+      }
+
+      .ln-main.is-panel-active {
+        display: flex;
+      }
+
+      /* 動態：家電控制 */
+      .ln-feed {
+        flex: 1;
+        min-height: 0;
+        display: none;
+        flex-direction: column;
+        background: var(--ln-bg-soft);
+      }
+
+      .ln-feed.is-panel-active {
+        display: flex;
+      }
+
+      .ln-feed__toolbar {
+        flex-shrink: 0;
+        padding: 14px 16px 12px;
+        border-bottom: 1px solid var(--ln-divider);
+        background: var(--ln-bg);
+      }
+
+      .ln-feed__title {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 700;
+        color: var(--ln-text);
+      }
+
+      .ln-feed__sub {
+        margin: 6px 0 12px;
+        font-size: 12px;
+        color: var(--ln-muted);
+        line-height: 1.45;
+      }
+
+      .feed-view-tabs {
+        display: flex;
+        gap: 8px;
+        padding: 4px;
+        background: var(--ln-bg-soft);
+        border-radius: 12px;
+      }
+
+      .feed-view-tab {
+        flex: 1;
+        border: none;
+        background: transparent;
+        color: var(--ln-muted);
+        font-size: 14px;
+        font-weight: 600;
+        padding: 9px 12px;
+        border-radius: 9px;
+        cursor: pointer;
+        transition: background 0.2s, color 0.2s, box-shadow 0.2s;
+      }
+
+      .feed-view-tab:hover {
+        color: var(--ln-text);
+      }
+
+      .feed-view-tab.is-active {
+        background: #fff;
+        color: var(--ln-text);
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+      }
+
+      .ln-feed-scroll {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+        padding: 12px 14px calc(16px + env(safe-area-inset-bottom));
+      }
+
+      .ln-feed-scroll--list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+      }
+
+      .ln-feed-scroll--list > .feed-list-item {
+        flex: 0 0 auto;
+        width: 100%;
+      }
+
+      .ln-feed-scroll--card {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 10px;
+        align-content: start;
+        align-items: start;
+      }
+
+      .ln-feed-scroll--card > .feed-card {
+        min-width: 0;
+        width: 100%;
+      }
+
+      @media (min-width: 380px) {
+        .ln-feed-scroll--card {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+      }
+
+      .feed-list-item,
+      .feed-card {
+        background: #fff;
+        border: 1px solid var(--ln-line);
+        border-radius: 14px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+        overflow: visible;
+        flex-shrink: 0;
+      }
+
+      .feed-list-item.is-off,
+      .feed-card.is-off {
+        background: #fafbfc;
+      }
+
+      .feed-list-item.is-unowned,
+      .feed-card.is-unowned {
+        opacity: 0.85;
+      }
+
+      .feed-list-item__head {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 14px;
+      }
+
+      .feed-card__head {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        padding: 12px;
+      }
+
+      .feed-card__head-top {
+        display: flex;
+        align-items: flex-start;
+        gap: 10px;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .feed-card__head-foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        width: 100%;
+        min-width: 0;
+      }
+
+      .feed-list-item__icon,
+      .feed-card__icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: linear-gradient(145deg, #eef8f1 0%, #e3f2ea 100%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 22px;
+        flex-shrink: 0;
+      }
+
+      .feed-card__icon {
+        width: 40px;
+        height: 40px;
+        font-size: 20px;
+      }
+
+      .feed-list-item.is-off .feed-list-item__icon,
+      .feed-card.is-off .feed-card__icon {
+        background: #f0f2f4;
+        filter: grayscale(0.35);
+      }
+
+      .feed-list-item__meta,
+      .feed-card__meta {
+        flex: 1 1 auto;
+        min-width: 0;
+      }
+
+      .feed-list-item__name {
+        margin: 0;
+        font-size: 15px;
+        font-weight: 700;
+        color: var(--ln-text);
+        line-height: 1.35;
+        word-break: break-word;
+      }
+
+      .feed-card__name {
+        margin: 0;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--ln-text);
+        line-height: 1.35;
+        word-break: break-word;
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+      }
+
+      .feed-list-item__status {
+        margin: 4px 0 0;
+        font-size: 12px;
+        color: var(--ln-muted);
+        line-height: 1.4;
+        word-break: break-word;
+      }
+
+      .feed-card__status {
+        margin: 0;
+        flex: 1;
+        min-width: 0;
+        font-size: 11px;
+        color: var(--ln-muted);
+        line-height: 1.35;
+        word-break: break-word;
+      }
+
+      .feed-list-item__status.is-on,
+      .feed-card__status.is-on {
+        color: #0a8f42;
+        font-weight: 600;
+      }
+
+      .feed-list-item__body,
+      .feed-card__body {
+        padding: 10px 14px 14px;
+        border-top: 1px solid var(--ln-divider);
+        overflow: visible;
+      }
+
+      .feed-ctrl-label {
+        margin: 0 0 8px;
+        font-size: 11px;
+        font-weight: 700;
+        color: var(--ln-muted);
+        letter-spacing: 0.04em;
+        text-transform: none;
+      }
+
+      .feed-chip-row {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .feed-chip {
+        border: 1px solid var(--ln-line);
+        background: var(--ln-bg-soft);
+        color: var(--ln-text);
+        font-size: 13px;
+        font-weight: 600;
+        padding: 8px 12px;
+        border-radius: 999px;
+        cursor: pointer;
+        transition: border-color 0.15s, background 0.15s, color 0.15s;
+        flex: 0 1 auto;
+        min-width: 0;
+      }
+
+      .ln-feed-scroll--card .feed-chip {
+        font-size: 12px;
+        padding: 7px 10px;
+      }
+
+      .ln-feed-scroll--card .feed-chip-row {
+        gap: 6px;
+      }
+
+      .feed-chip:hover:not(:disabled) {
+        border-color: #b8dfc8;
+        background: #f0faf4;
+      }
+
+      .feed-chip.is-on {
+        border-color: var(--ln-green);
+        background: #e8f8ee;
+        color: #067a38;
+      }
+
+      .feed-chip:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+
+      .feed-range-wrap {
+        margin-top: 4px;
+      }
+
+      .feed-range-wrap input[type='range'] {
+        width: 100%;
+        accent-color: var(--ln-green);
+        display: block;
+      }
+
+      .feed-range-val {
+        display: block;
+        text-align: right;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--ln-green-dark);
+        margin-top: 4px;
+      }
+
+      .feed-unowned-note {
+        margin: 0;
+        padding: 0 14px 14px;
+        font-size: 12px;
+        color: var(--ln-muted);
+      }
+
+      .feed-switch {
+        position: relative;
+        width: 50px;
+        height: 30px;
+        flex-shrink: 0;
+      }
+
+      .feed-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        position: absolute;
+      }
+
+      .feed-switch__track {
+        position: absolute;
+        inset: 0;
+        border-radius: 999px;
+        background: #d5dade;
+        transition: background 0.2s;
+        cursor: pointer;
+      }
+
+      .feed-switch__thumb {
+        position: absolute;
+        width: 26px;
+        height: 26px;
+        left: 2px;
+        top: 2px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s;
+        pointer-events: none;
+      }
+
+      .feed-switch input:checked + .feed-switch__track {
+        background: var(--ln-green);
+      }
+
+      .feed-switch input:checked + .feed-switch__track .feed-switch__thumb {
+        transform: translateX(20px);
+      }
+
+      .feed-switch input:disabled + .feed-switch__track {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+
+      /* 更多：快速指令按鈕 */
+      .ln-more-panel {
+        flex: 1;
+        min-height: 0;
+        display: none;
+        flex-direction: column;
+        align-items: stretch;
+        justify-content: flex-start;
+        padding: 0;
+        color: var(--ln-text);
+        font-size: 14px;
+        text-align: left;
+        background: var(--ln-bg);
+      }
+
+      .ln-more-panel.is-panel-active {
+        display: flex;
+      }
+
+      .more-builder {
+        flex: 1;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .more-builder__head {
+        flex-shrink: 0;
+        padding: 14px 16px 10px;
+        border-bottom: 1px solid var(--ln-divider);
+      }
+
+      .more-builder__head h2 {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 700;
+      }
+
+      .more-builder__head p {
+        margin: 8px 0 0;
+        font-size: 12px;
+        color: var(--ln-muted);
+        line-height: 1.45;
+      }
+
+      .more-builder__scroll {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+        padding: 12px 14px 16px;
+      }
+
+      .more-section {
+        margin-bottom: 16px;
+      }
+
+      .more-section__title {
+        margin: 0 0 8px;
+        font-size: 12px;
+        font-weight: 700;
+        color: var(--ln-muted);
+        letter-spacing: 0.02em;
+      }
+
+      .more-chips {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .more-chip {
+        border: 1px solid var(--ln-line);
+        background: var(--ln-bg-soft);
+        color: var(--ln-text);
+        font-size: 13px;
+        padding: 8px 12px;
+        border-radius: 999px;
+        cursor: pointer;
+        max-width: 100%;
+      }
+
+      .more-chip:hover {
+        border-color: #b8d4f0;
+        background: #f0f7ff;
+      }
+
+      .more-chip.is-on {
+        border-color: var(--ln-green);
+        background: #e8f8ee;
+        font-weight: 600;
+      }
+
+      .more-builder__footer {
+        flex-shrink: 0;
+        padding: 10px 14px calc(12px + env(safe-area-inset-bottom));
+        border-top: 1px solid var(--ln-divider);
+        background: var(--ln-bg-soft);
+      }
+
+      .more-preview {
+        width: 100%;
+        min-height: 56px;
+        padding: 10px 12px;
+        border: 1px solid var(--ln-line);
+        border-radius: 10px;
+        font-size: 13px;
+        resize: vertical;
+        margin-bottom: 10px;
+        background: #fff;
+        color: var(--ln-text);
+      }
+
+      .more-builder__actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+      }
+
+      .more-btn {
+        flex: 1;
+        min-width: 100px;
+        border: none;
+        border-radius: 10px;
+        padding: 10px 12px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+
+      .more-btn--primary {
+        background: var(--ln-green);
+        color: #fff;
+      }
+
+      .more-btn--primary:hover {
+        background: var(--ln-green-dark);
+      }
+
+      .more-btn--secondary {
+        background: var(--ln-bg);
+        border: 1px solid var(--ln-line);
+        color: var(--ln-text);
+      }
+
+      .more-btn--ghost {
+        background: transparent;
+        border: 1px dashed var(--ln-line);
+        color: var(--ln-muted);
+        flex: 0 0 auto;
+        min-width: auto;
+      }
+
+      .visually-hidden {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        white-space: nowrap;
+        border: 0;
+      }
+
+      .ln-fab.is-hidden {
+        display: none;
+      }
+
+      .ln-tabs {
+        display: flex;
+        align-items: stretch;
+        padding: 0 8px;
+        border-bottom: 1px solid var(--ln-line);
+        gap: 2px;
+      }
+
+      .ln-tab {
+        flex: 1;
+        border: none;
+        background: none;
+        color: var(--ln-muted);
+        font-size: 13px;
+        font-weight: 500;
+        padding: 13px 2px 10px;
+        cursor: pointer;
+        position: relative;
+      }
+
+      .ln-tab:hover {
+        color: var(--ln-text);
+      }
+
+      .ln-tab.is-active {
+        color: var(--ln-text);
+        font-weight: 700;
+      }
+
+      .ln-tab.is-active::after {
+        content: '';
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 0;
+        height: 3px;
+        border-radius: 2px 2px 0 0;
+        background: var(--ln-text);
+      }
+
+      .ln-search-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 14px 8px;
+        border-bottom: 1px solid var(--ln-divider);
+      }
+
+      .ln-search {
+        flex: 1;
+        display: flex;
+        align-items: center;
+        background: var(--ln-bg-soft);
+        border-radius: 10px;
+        padding: 0 10px 0 12px;
+        height: 38px;
+        border: 1px solid transparent;
+      }
+
+      .ln-search:focus-within {
+        border-color: #d0d5dd;
+        background: #fff;
+      }
+
+      .ln-search__icon {
+        color: #b0b6bf;
+        font-size: 14px;
+        margin-right: 8px;
+      }
+
+      .ln-search__input {
+        flex: 1;
+        border: none;
+        background: transparent;
+        outline: none;
+        font-size: 14px;
+        color: var(--ln-text);
+      }
+
+      .ln-search__input::placeholder {
+        color: #a8aeb8;
+      }
+
+      .ln-sort {
+        width: 36px;
+        height: 36px;
+        border: none;
+        border-radius: 8px;
+        background: transparent;
+        color: var(--ln-muted);
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      .ln-sort:hover {
+        background: var(--ln-bg-soft);
+        color: var(--ln-text);
+      }
+
+      .ln-list-scroll {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+      }
+
+      .ln-row {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 16px;
+        border-bottom: 1px solid var(--ln-divider);
+        cursor: pointer;
+        transition: background 0.12s;
+      }
+
+      .ln-row:hover {
+        background: #fafbfc;
+      }
+
+      .ln-row--mute {
+        cursor: default;
+      }
+
+      .ln-row--mute:hover {
+        background: transparent;
+      }
+
+      .ln-avatar {
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        flex-shrink: 0;
+        overflow: hidden;
+        display: grid;
+        place-items: center;
+        font-size: 18px;
+        font-weight: 700;
+        color: #fff;
+      }
+
+      .ln-avatar--group {
+        background: linear-gradient(145deg, var(--ln-green) 0%, #2aab7a 100%);
+        font-size: 22px;
+      }
+
+      .ln-avatar--device {
+        background: linear-gradient(145deg, #5eb5ff 0%, #4478f6 99%);
+      }
+
+      .ln-avatar--device.ln-avatar--icon {
+        background: linear-gradient(160deg, #eef5ff 0%, #dbeafe 100%);
+        border: 1px solid #b8d4f0;
+        font-size: 24px;
+        font-weight: 400;
+        line-height: 1;
+      }
+
+      .ln-avatar--blank {
+        background: linear-gradient(180deg, #dff5ea 0%, #cbeedd 100%);
+        border: 1px solid #b9e0cc;
+      }
+
+      .ln-avatar--blank svg {
+        width: 28px;
+        height: 28px;
+        opacity: 0.45;
+      }
+
+      .ln-row__body {
+        flex: 1;
+        min-width: 0;
+      }
+
+      .ln-row__top {
+        display: flex;
+        align-items: baseline;
+        gap: 8px;
+        margin-bottom: 4px;
+      }
+
+      .ln-row__name {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--ln-text);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .ln-row__meta {
+        font-size: 12px;
+        color: #ababab;
+        flex-shrink: 0;
+      }
+
+      .ln-row__preview {
+        font-size: 13px;
+        color: #8a8a8a;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .ln-row__right {
+        flex-shrink: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-end;
+        gap: 6px;
+        min-width: 52px;
+      }
+
+      .ln-row__time {
+        font-size: 11px;
+        color: #b5b5b5;
+      }
+
+      .ln-unread {
+        min-width: 20px;
+        height: 20px;
+        padding: 0 6px;
+        border-radius: 10px;
+        background: var(--ln-green);
+        color: #fff;
+        font-size: 11px;
+        font-weight: 700;
+        line-height: 20px;
+        text-align: center;
+      }
+
+      .ln-fab {
+        position: absolute;
+        right: 18px;
+        bottom: calc(68px + env(safe-area-inset-bottom));
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        border: none;
+        background: var(--ln-green);
+        color: #fff;
+        font-size: 28px;
+        line-height: 1;
+        cursor: pointer;
+        box-shadow: 0 4px 14px rgba(6, 199, 85, 0.45);
+        display: grid;
+        place-items: center;
+        z-index: 5;
+      }
+
+      .ln-fab:hover {
+        background: var(--ln-green-dark);
+      }
+
+      .ln-fab__glyph {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        font-weight: 300;
+        line-height: 0.85;
+      }
+
+      .view--chat {
+        flex-direction: column;
+        background: #f7f9fc;
+      }
+
+      .chat-top {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        min-height: var(--header-chat);
+        padding: 0 8px;
+        background: var(--ln-bg);
+        border-bottom: 1px solid var(--ln-line);
+        box-shadow: var(--shadow-soft);
+      }
+
+      .btn-back {
+        width: 44px;
+        height: 44px;
+        border: none;
+        border-radius: 10px;
+        background: transparent;
+        color: var(--ln-text);
+        font-size: 26px;
+        line-height: 1;
+        cursor: pointer;
+      }
+
+      .btn-back:hover {
+        background: var(--ln-bg-soft);
+      }
+
+      .chat-top__main {
+        flex: 1;
+        min-width: 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding-right: 8px;
+      }
+
+      .chat-top__avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background: linear-gradient(145deg, var(--ln-green) 0%, #2aab7a 100%);
+        color: #fff;
+        font-weight: 700;
+        font-size: 18px;
+        display: grid;
+        place-items: center;
+        flex-shrink: 0;
+      }
+
+      .chat-top__text {
+        min-width: 0;
+      }
+
+      .chat-top__title {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .chat-top__sub {
+        margin: 2px 0 0;
+        font-size: 11px;
+        color: var(--ln-muted);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .message-list {
+        flex: 1;
+        overflow-y: auto;
+        padding: 12px 12px 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        min-height: 0;
+      }
+
+      .message-list__empty {
+        margin: auto;
+        text-align: center;
+        color: var(--ln-muted);
+        font-size: 14px;
+        padding: 24px;
+      }
+
+      .msg-row {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        max-width: 100%;
+      }
+
+      .msg-row--other {
+        justify-content: flex-start;
+      }
+
+      .msg-row--self {
+        justify-content: flex-end;
+      }
+
+      .msg-avatar {
+        flex-shrink: 0;
+        width: 34px;
+        height: 34px;
+        border-radius: 50%;
+        background: #fff;
+        border: 1px solid var(--ln-line);
+        font-size: 13px;
+        font-weight: 600;
+        color: #6b7280;
+        display: grid;
+        place-items: center;
+      }
+
+      .msg-avatar--icon {
+        font-size: 17px;
+        font-weight: 400;
+        background: linear-gradient(160deg, #f6f9ff 0%, #e8f0fc 100%);
+      }
+
+      .msg-stack {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        max-width: min(78%, 320px);
+      }
+
+      .msg-row--self .msg-stack {
+        align-items: flex-end;
+        max-width: min(85%, 340px);
+      }
+
+      .msg-sender {
+        font-size: 11px;
+        color: var(--ln-muted);
+        padding-left: 4px;
+      }
+
+      .bubble {
+        border-radius: var(--radius-lg);
+        padding: 10px 12px;
+        box-shadow: var(--shadow-soft);
+        position: relative;
+      }
+
+      .bubble__text {
+        margin: 0;
+        font-size: 14px;
+        word-break: break-word;
+        white-space: pre-wrap;
+      }
+
+      .bubble__time {
+        display: block;
+        margin-top: 6px;
+        font-size: 10px;
+        opacity: 0.72;
+      }
+
+      .msg-row--self .bubble__time {
+        text-align: right;
+      }
+
+      .bubble--owner {
+        background: var(--owner-bg);
+        color: var(--owner-text);
+        border-bottom-right-radius: var(--radius-sm);
+      }
+
+      .bubble--manager {
+        background: var(--manager-bg);
+        border: 1px solid var(--manager-border);
+        border-bottom-left-radius: var(--radius-sm);
+      }
+
+      .bubble--device {
+        background: var(--device-bg);
+        border: 1px solid var(--device-border);
+        border-bottom-left-radius: var(--radius-sm);
+      }
+
+      .msg-row--self .bubble {
+        border-bottom-right-radius: var(--radius-sm);
+        border-bottom-left-radius: var(--radius-lg);
+      }
+
+      .composer {
+        flex-shrink: 0;
+        background: var(--ln-bg);
+        border-top: 1px solid var(--ln-line);
+        padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
+        display: flex;
+        gap: 8px;
+        align-items: flex-end;
+      }
+
+      .composer__input {
+        flex: 1;
+        resize: none;
+        min-height: 44px;
+        max-height: 120px;
+        padding: 10px 12px;
+        border: 1px solid var(--ln-line);
+        border-radius: 12px;
+        font-size: 14px;
+        outline: none;
+      }
+
+      .composer__input:focus {
+        border-color: var(--ln-green);
+      }
+
+      .composer__send {
+        flex-shrink: 0;
+        height: 44px;
+        padding: 0 18px;
+        border: none;
+        border-radius: 12px;
+        background: var(--ln-green);
+        color: #fff;
+        font-weight: 600;
+        font-size: 14px;
+        cursor: pointer;
+      }
+
+      .composer__send:hover:not(:disabled) {
+        background: var(--ln-green-dark);
+      }
+
+      .composer__send:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+
+      @media (max-width: 520px) {
+        .ln-tab {
+          font-size: 12px;
+          max-width: none;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="device-viewport">
+      <div class="phone-frame" role="presentation">
+        <div class="phone-screen">
+          <span class="phone-notch" aria-hidden="true"></span>
+          <div class="phone-statusbar">
+            <span id="statusTime">9:41</span>
+            <span class="phone-statusbar__icons" aria-hidden="true">
+              📶 🔋
+            </span>
+          </div>
+
+          <div class="app-shell">
+      <!-- LINE 風主畫面（App：單欄＋底部導覽） -->
+      <div id="viewHome" class="view view--home is-active">
+        <aside class="ln-sidebar" aria-label="主選單（桌面版保留，App 內已隱藏）">
+          <button type="button" class="ln-sidebtn" title="個人檔案">👤</button>
+          <button type="button" class="ln-sidebtn is-selected" title="聊天">
+            💬
+            <span class="ln-sidebtn__badge">9+</span>
+          </button>
+          <button type="button" class="ln-sidebtn" title="LINE Pay">💳</button>
+          <span class="ln-sidefill"></span>
+          <button type="button" class="ln-sidebtn" title="設定">⚙️</button>
+        </aside>
+
+        <main class="ln-main is-panel-active" id="panelList">
+          <nav class="ln-tabs" aria-label="清單分類">
+            <button type="button" class="ln-tab" data-tab="all">全部</button>
+            <button type="button" class="ln-tab" data-tab="appliances">家電友</button>
+            <button type="button" class="ln-tab is-active" data-tab="chats">聊天</button>
+            <button type="button" class="ln-tab" data-tab="groups">群組</button>
+          </nav>
+
+          <div class="ln-search-row">
+            <div class="ln-search">
+              <span class="ln-search__icon" aria-hidden="true">🔍</span>
+              <input
+                type="search"
+                id="chatSearchInput"
+                class="ln-search__input"
+                placeholder="搜尋聊天和訊息"
+                autocomplete="off"
+                aria-label="搜尋聊天和訊息"
+              />
+            </div>
+            <button type="button" class="ln-sort" title="排序">⇅</button>
+          </div>
+
+          <div class="ln-list-scroll">
+            <div id="lineChatList" role="list"></div>
+          </div>
+
+          <button type="button" class="ln-fab" id="fabOpenChat" title="進入協作群組">
+            <span class="ln-fab__glyph" aria-hidden="true">
+              <span style="font-size: 13px; font-weight: 700">＋</span>
+              <span style="font-size: 16px">💬</span>
+            </span>
+          </button>
+        </main>
+
+        <section class="ln-feed" id="panelFeed" aria-label="動態">
+          <div class="ln-feed__toolbar">
+            <h2 class="ln-feed__title">動態</h2>
+            <p class="ln-feed__sub">切換清單或卡片檢視，點選按鈕調整冷氣溫度與風扇風速。</p>
+            <div class="feed-view-tabs" role="tablist" aria-label="顯示方式">
+              <button
+                type="button"
+                class="feed-view-tab is-active"
+                id="feedViewListBtn"
+                data-feed-view="list"
+                role="tab"
+                aria-selected="true"
+              >
+                清單
+              </button>
+              <button
+                type="button"
+                class="feed-view-tab"
+                id="feedViewCardBtn"
+                data-feed-view="card"
+                role="tab"
+                aria-selected="false"
+              >
+                卡片
+              </button>
+            </div>
+          </div>
+          <div class="ln-feed-scroll ln-feed-scroll--list" id="applianceSwitchList" role="list"></div>
+        </section>
+
+        <section class="ln-more-panel" id="panelMore" aria-label="更多">
+          <div class="more-builder" id="moreBuilder">
+            <div class="more-builder__head">
+              <h2>快速指令</h2>
+            </div>
+            <div class="more-builder__scroll" id="moreBuilderScroll" aria-live="polite"></div>
+            <div class="more-builder__footer">
+              <label class="visually-hidden" for="morePreview">指令預覽</label>
+              <textarea
+                id="morePreview"
+                class="more-preview"
+                readonly
+                rows="3"
+                aria-label="目前組好的指令"
+              ></textarea>
+              <div class="more-builder__actions">
+                <button type="button" class="more-btn more-btn--primary" id="moreSendBtn">
+                  送出至總群
+                </button>
+                <button type="button" class="more-btn more-btn--secondary" id="moreFillBtn">
+                  僅填入聊天室
+                </button>
+                <button type="button" class="more-btn more-btn--ghost" id="moreClearBtn">清除</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <nav class="app-tabbar" aria-label="App 底部選單">
+          <button type="button" data-bottom="home" data-default-tab="all">
+            <span class="app-tabbar__icon">🏠</span>首頁
+          </button>
+          <button type="button" class="is-active" data-bottom="chats" data-default-tab="chats">
+            <span class="app-tabbar__icon">💬</span>聊天
+          </button>
+          <button type="button" data-bottom="feed"><span class="app-tabbar__icon">📰</span>動態</button>
+          <button type="button" data-bottom="more"><span class="app-tabbar__icon">⋯</span>更多</button>
+        </nav>
+      </div>
+
+      <!-- 群組聊天 -->
+      <div id="viewChat" class="view view--chat">
+        <header class="chat-top">
+          <button type="button" class="btn-back" id="backHomeBtn" aria-label="返回">‹</button>
+          <div class="chat-top__main">
+            <div class="chat-top__avatar" aria-hidden="true">聊</div>
+            <div class="chat-top__text">
+              <h1 class="chat-top__title" id="chatTopTitle">智慧居家協作總群</h1>
+              <p class="chat-top__sub" id="headerSubtitle"></p>
+            </div>
+          </div>
+        </header>
+
+        <div class="message-list" id="messageList" role="log" aria-live="polite" aria-relevant="additions"></div>
+
+        <div>
+          <form class="composer" id="composerForm" autocomplete="off">
+            <textarea
+              id="msgInput"
+              class="composer__input"
+              rows="1"
+              placeholder="輸入訊息…"
+              aria-label="訊息輸入"
+            ></textarea>
+            <button type="submit" class="composer__send" id="sendBtn" disabled>送出</button>
+          </form>
+        </div>
+      </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      (function () {
+        var OWNER_ID = 'u-owner';
+        var MAIN_GROUP_ID = 'g-main';
+
+        /** 空間群組：客廳、廚房、主臥、客房、書房（總群另列） */
+        var spaceGroups = [
+          { id: 'g-main', name: '智慧居家協作總群', isMain: true },
+          { id: 'g-living', name: '客廳' },
+          { id: 'g-kitchen', name: '廚房' },
+          { id: 'g-master', name: '主臥' },
+          { id: 'g-guest', name: '客房' },
+          { id: 'g-study', name: '書房' },
+        ];
+
+        var ZONE_ORDER = ['g-living', 'g-kitchen', 'g-master', 'g-guest', 'g-study'];
+
+        /** 單一家電；spaces = 所屬空間群（可多個） */
+        var applianceFriends = [
+          { id: 'd-gate-main', name: '大門', owned: true, spaces: ['g-living'] },
+          { id: 'd-door-master', name: '主臥門', owned: true, spaces: ['g-master'] },
+          { id: 'd-door-guest', name: '客房門', owned: true, spaces: ['g-guest'] },
+          { id: 'd-door-study', name: '書房門', owned: true, spaces: ['g-study'] },
+          { id: 'd-light-r1a', name: '房間1燈1', owned: true, spaces: ['g-guest'] },
+          { id: 'd-light-r2a', name: '房間2燈1', owned: false, spaces: ['g-guest'] },
+          { id: 'd-light-living', name: '客廳燈1', owned: true, spaces: ['g-living'] },
+          { id: 'd-light-kitchen', name: '廚房燈1', owned: true, spaces: ['g-kitchen'] },
+          { id: 'd-light-master', name: '主臥燈1', owned: true, spaces: ['g-master'] },
+          { id: 'd-light-guest', name: '客房燈1', owned: true, spaces: ['g-guest'] },
+          { id: 'd-light-study', name: '書房燈1', owned: true, spaces: ['g-study'] },
+          { id: 'd-cam-living', name: '客廳攝影機', owned: true, spaces: ['g-living'] },
+          { id: 'd-cam-master', name: '主臥攝影機', owned: true, spaces: ['g-master'] },
+          { id: 'd-cam-kitchen', name: '廚房攝影機', owned: true, spaces: ['g-kitchen'] },
+          { id: 'd-cam-guest', name: '客房攝影機', owned: true, spaces: ['g-guest'] },
+          { id: 'd-cam-study', name: '書房攝影機', owned: true, spaces: ['g-study'] },
+          { id: 'd-cam-hall', name: '玄關攝影機', owned: true, spaces: ['g-living'] },
+          { id: 'd-tv-living', name: '客廳電視', owned: true, spaces: ['g-living'] },
+          { id: 'd-ac-living', name: '客廳冷氣', owned: true, spaces: ['g-living'] },
+          { id: 'd-ac-master', name: '主臥冷氣', owned: true, spaces: ['g-master'] },
+          { id: 'd-fan-living', name: '客廳電風扇', owned: true, spaces: ['g-living'] },
+          { id: 'd-window-living', name: '客廳窗戶', owned: true, spaces: ['g-living'] },
+          { id: 'd-robo', name: '掃地機器人', owned: false, spaces: ['g-living'] },
+          { id: 'd-water', name: '廚房飲水機', owned: false, spaces: ['g-kitchen'] },
+        ];
+
+        var previewById = {
+          'd-gate-main': '大門：待命中',
+          'd-door-master': '主臥門：已上鎖',
+          'd-door-guest': '客房門：已上鎖',
+          'd-door-study': '書房門：已上鎖',
+          'd-light-r1a': '房間1燈1：待機',
+          'd-light-r2a': '尚未連線此設備',
+          'd-light-living': '客廳燈1：待機',
+          'd-light-kitchen': '廚房燈1：待機',
+          'd-light-master': '主臥燈1：待機',
+          'd-light-guest': '客房燈1：待機',
+          'd-light-study': '書房燈1：待機',
+          'd-cam-living': '門口區域偵測中',
+          'd-cam-master': '主臥畫面：待機',
+          'd-cam-kitchen': '廚房畫面：待機',
+          'd-cam-guest': '客房畫面：待機',
+          'd-cam-study': '書房畫面：待機',
+          'd-cam-hall': '玄關畫面：待機',
+          'd-tv-living': '客廳電視：待機',
+          'd-ac-living': '客廳冷氣：26°C',
+          'd-ac-master': '主臥冷氣：關閉',
+          'd-fan-living': '客廳電風扇：關閉',
+          'd-window-living': '客廳窗戶：正常',
+          'd-robo': '尚未連線此設備',
+          'd-water': '尚未連線此設備',
+        };
+
+        function getDevice(devId) {
+          for (var i = 0; i < applianceFriends.length; i++) {
+            if (applianceFriends[i].id === devId) return applianceFriends[i];
+          }
+          return null;
+        }
+
+        /** 家電列表／氣泡頭貼用圖示 */
+        function deviceIconForAppliance(a) {
+          if (!a) return '🔌';
+          var id = a.id || '';
+          var nm = a.name || '';
+          if (id.indexOf('cam') !== -1 || nm.indexOf('攝影') !== -1) return '📷';
+          if (id.indexOf('light') !== -1 || nm.indexOf('燈') !== -1) return '💡';
+          if (id.indexOf('tv') !== -1 || nm.indexOf('電視') !== -1) return '📺';
+          if (id.indexOf('ac') !== -1 || nm.indexOf('冷氣') !== -1) return '❄️';
+          if (id.indexOf('fan') !== -1 || nm.indexOf('風扇') !== -1) return '🌀';
+          if (id.indexOf('window') !== -1 || nm.indexOf('窗戶') !== -1) return '🪟';
+          if (id.indexOf('robo') !== -1 || nm.indexOf('掃地') !== -1) return '🤖';
+          if (id.indexOf('water') !== -1 || nm.indexOf('飲水') !== -1) return '💧';
+          if (id.indexOf('gate') !== -1 || nm.indexOf('大門') !== -1) return '🚪';
+          if (id.indexOf('door') !== -1 || nm.indexOf('門') !== -1) return '🚪';
+          return '🔌';
+        }
+
+        function deviceIconAvatarEl(a) {
+          var d = document.createElement('div');
+          d.className = 'ln-avatar ln-avatar--device ln-avatar--icon';
+          d.textContent = deviceIconForAppliance(a);
+          if (a && a.name) d.title = a.name;
+          d.setAttribute('aria-hidden', 'true');
+          return d;
+        }
+
+        function getSpace(spId) {
+          for (var i = 0; i < spaceGroups.length; i++) {
+            if (spaceGroups[i].id === spId) return spaceGroups[i];
+          }
+          return null;
+        }
+
+        function devicesInSpace(spaceId) {
+          var r = [];
+          for (var i = 0; i < applianceFriends.length; i++) {
+            var a = applianceFriends[i];
+            if (!a.owned) continue;
+            for (var j = 0; j < a.spaces.length; j++) {
+              if (a.spaces[j] === spaceId) {
+                r.push(a);
+                break;
+              }
+            }
+          }
+          return r;
+        }
+
+        function buildParticipantsForThread(threadId) {
+          var list = [
+            { id: 'u-owner', name: '主人', role: 'owner' },
+            { id: 'a-manager', name: 'Manager AI', role: 'manager' },
+          ];
+          if (threadId === MAIN_GROUP_ID) {
+            applianceFriends.forEach(function (a) {
+              if (a.owned) list.push({ id: a.id, name: a.name, role: 'device' });
+            });
+            return list;
+          }
+          var sp = getSpace(threadId);
+          if (sp && !sp.isMain) {
+            devicesInSpace(threadId).forEach(function (a) {
+              list.push({ id: a.id, name: a.name, role: 'device' });
+            });
+            return list;
+          }
+          var d = getDevice(threadId);
+          if (d && d.owned) {
+            list.push({ id: d.id, name: d.name, role: 'device' });
+          }
+          return list;
+        }
+
+        function memberCountForThread(threadId) {
+          return buildParticipantsForThread(threadId).length;
+        }
+
+        function threadTitle(threadId) {
+          if (threadId === MAIN_GROUP_ID) return '智慧居家協作總群';
+          var s = getSpace(threadId);
+          if (s && !s.isMain) return s.name + '（空間群組）';
+          var dv = getDevice(threadId);
+          if (dv) return dv.name + ' · 單聊';
+          return '聊天室';
+        }
+
+        var now = Date.now();
+        var messagesByThread = {};
+
+        function ensureThread(threadId) {
+          if (!messagesByThread[threadId]) messagesByThread[threadId] = [];
+          return messagesByThread[threadId];
+        }
+
+        messagesByThread[MAIN_GROUP_ID] = [
+          {
+            id: 'm1',
+            senderId: 'u-owner',
+            senderName: '主人',
+            role: 'owner',
+            text: '狗想尿尿的時候幫我開大門。',
+            createdAtMs: now - 1000 * 60 * 12,
+          },
+          {
+            id: 'm2',
+            senderId: 'a-manager',
+            senderName: 'Manager AI',
+            role: 'manager',
+            text:
+              '收到。① 客廳攝影機留意外側 ② 大門準備解鎖 ③ 可請客廳冷氣／電風扇調低速。',
+            createdAtMs: now - 1000 * 60 * 11,
+          },
+          {
+            id: 'm3',
+            senderId: 'd-cam-living',
+            senderName: '客廳攝影機',
+            role: 'device',
+            text: '狀態：門口區域目前無移動物體。偵測已啟用。',
+            createdAtMs: now - 1000 * 60 * 10,
+          },
+          {
+            id: 'm4',
+            senderId: 'd-gate-main',
+            senderName: '大門',
+            role: 'device',
+            text: '待命中。收到解鎖指令後會執行並回報。',
+            createdAtMs: now - 1000 * 60 * 9,
+          },
+        ];
+
+        messagesByThread['g-living'] = [
+          {
+            id: 'sl1',
+            senderId: 'a-manager',
+            senderName: 'Manager AI',
+            role: 'manager',
+            text: '這裡是客廳空間群組，可協調客廳燈光、電視與冷氣。',
+            createdAtMs: now - 1000 * 60 * 60 * 3,
+          },
+        ];
+        messagesByThread['g-kitchen'] = [];
+        messagesByThread['g-master'] = [];
+        messagesByThread['g-guest'] = [];
+        messagesByThread['g-study'] = [];
+
+        applianceFriends.forEach(function (a) {
+          ensureThread(a.id);
+        });
+
+        var currentThreadId = MAIN_GROUP_ID;
+
+        var viewHomeEl = document.getElementById('viewHome');
+        var viewChatEl = document.getElementById('viewChat');
+        var panelListEl = document.getElementById('panelList');
+        var panelFeedEl = document.getElementById('panelFeed');
+        var panelMoreEl = document.getElementById('panelMore');
+        var applianceSwitchListEl = document.getElementById('applianceSwitchList');
+        var lineChatListEl = document.getElementById('lineChatList');
+        var chatSearchInput = document.getElementById('chatSearchInput');
+        var fabOpenChat = document.getElementById('fabOpenChat');
+        var backHomeBtn = document.getElementById('backHomeBtn');
+
+        var listEl = document.getElementById('messageList');
+        var subtitleEl = document.getElementById('headerSubtitle');
+        var formEl = document.getElementById('composerForm');
+        var inputEl = document.getElementById('msgInput');
+        var sendBtn = document.getElementById('sendBtn');
+
+        var activeTab = 'chats';
+        var bottomPanelMode = 'list';
+        var listTabFromBottom = 'chats';
+        var feedViewMode = 'list';
+        var feedViewTabsBound = false;
+
+        var appliancePower = {};
+        /** 冷氣目標溫度 °C（16–30） */
+        var applianceAcTemp = {};
+        /** 風扇風速 0 關 1 低 2 中 3 高 */
+        var applianceFanLevel = {};
+
+        function deviceIsAc(a) {
+          if (!a) return false;
+          return a.id.indexOf('ac') !== -1 || (a.name && a.name.indexOf('冷氣') !== -1);
+        }
+
+        function deviceIsFan(a) {
+          if (!a) return false;
+          return a.id.indexOf('fan') !== -1 || (a.name && a.name.indexOf('風扇') !== -1);
+        }
+
+        function ensureAcTemp(id) {
+          if (applianceAcTemp[id] == null) applianceAcTemp[id] = 26;
+          var t = applianceAcTemp[id];
+          if (t < 16) t = 16;
+          if (t > 30) t = 30;
+          applianceAcTemp[id] = t;
+          return t;
+        }
+
+        function ensureFanLevel(id) {
+          if (applianceFanLevel[id] == null) applianceFanLevel[id] = 0;
+          var lv = applianceFanLevel[id];
+          if (lv < 0) lv = 0;
+          if (lv > 3) lv = 3;
+          applianceFanLevel[id] = lv;
+          return lv;
+        }
+
+        /** 依目前電源與調整狀態更新列表預覽文案 */
+        function refreshDevicePreview(a) {
+          if (!a) return;
+          var id = a.id;
+          if (deviceIsAc(a)) {
+            var on = !!appliancePower[id];
+            var t = ensureAcTemp(id);
+            previewById[id] = a.name + '：' + (on ? t + '°C' : '關閉');
+          } else if (deviceIsFan(a)) {
+            var onF = !!appliancePower[id];
+            var lv = ensureFanLevel(id);
+            var speedLabel = ['關閉', '低速', '中速', '高速'][onF ? Math.max(1, lv) : 0];
+            if (onF && lv <= 0) speedLabel = '低速';
+            previewById[id] = a.name + '：' + (onF ? speedLabel : '關閉');
+          }
+        }
+
+        applianceFriends.forEach(function (a) {
+          appliancePower[a.id] = !!a.owned;
+          if (deviceIsAc(a)) {
+            applianceAcTemp[a.id] = 26;
+          }
+          if (deviceIsFan(a)) {
+            applianceFanLevel[a.id] = appliancePower[a.id] ? 2 : 0;
+          }
+          if (deviceIsAc(a) || deviceIsFan(a)) {
+            refreshDevicePreview(a);
+          }
+        });
+
+        /** 更多：快速指令（人／事／時／地／物） */
+        var QUICK_PEOPLE = ['蔡岩夆', '郭秦佐', '簡瑞奇', '曾奕銘', '吳柏均', '莊庭瑞'];
+        var QUICK_EVENTS = ['到家', '離家', '就寢', '起床', '返家', '出門', '訪客來訪', '休息'];
+        var QUICK_TIMES = ['立刻', '馬上', '今晚', '明早', '返家時', '出門後', '睡前', '稍後'];
+        var QUICK_PLACES = ['門口', '玄關', '客廳', '主臥', '客房', '廚房', '書房', '全宅'];
+
+        var quickPick = {
+          person: '',
+          event: '',
+          time: '',
+          place: '',
+          trigger: '',
+          actions: [],
+        };
+
+        function quickActionLabels() {
+          var labels = [];
+          for (var i = 0; i < applianceFriends.length; i++) {
+            if (applianceFriends[i].owned) labels.push(applianceFriends[i].name);
+          }
+          return labels;
+        }
+
+        function quickTriggerLabels() {
+          var labels = ['攝影機'];
+          for (var i = 0; i < applianceFriends.length; i++) {
+            var a = applianceFriends[i];
+            if (!a.owned) continue;
+            if (a.id.indexOf('cam') !== -1 || a.name.indexOf('攝影') !== -1) {
+              if (labels.indexOf(a.name) < 0) labels.push(a.name);
+            }
+          }
+          return labels;
+        }
+
+        function composeQuickCommand() {
+          var p = quickPick.person || '某人';
+          var tr = quickPick.trigger || '攝影機';
+          var ev = quickPick.event || '到家';
+          var pl = quickPick.place ? '於「' + quickPick.place + '」' : '';
+          var tm = quickPick.time ? '（' + quickPick.time + '）' : '';
+          var acts = quickPick.actions;
+          var actsStr;
+          if (!acts.length) {
+            actsStr = '（請在「物（要開啟的設備）」至少選一項）';
+          } else {
+            actsStr = acts
+              .map(function (x) {
+                return '「' + x + '」';
+              })
+              .join('跟');
+          }
+          return '「' + p + '」被「' + tr + '」' + pl + '偵測到已' + ev + tm + '，請開啟' + actsStr + '。';
+        }
+
+        function updateMorePreview() {
+          var el = document.getElementById('morePreview');
+          if (el) el.value = composeQuickCommand();
+        }
+
+        function clearQuickPicks() {
+          quickPick.person = '';
+          quickPick.event = '';
+          quickPick.time = '';
+          quickPick.place = '';
+          quickPick.trigger = '';
+          quickPick.actions = [];
+          var root = document.getElementById('moreBuilderScroll');
+          if (root) {
+            root.querySelectorAll('.more-chip.is-on').forEach(function (c) {
+              c.classList.remove('is-on');
+            });
+          }
+          updateMorePreview();
+        }
+
+        function setLnTab(tabId) {
+          activeTab = tabId || 'all';
+          document.querySelectorAll('#panelList .ln-tab').forEach(function (b) {
+            b.classList.toggle('is-active', b.getAttribute('data-tab') === activeTab);
+          });
+        }
+
+        function setBottomPanel(mode) {
+          bottomPanelMode = mode;
+          var showList = mode === 'list';
+          panelListEl.classList.toggle('is-panel-active', showList);
+          panelFeedEl.classList.toggle('is-panel-active', mode === 'feed');
+          panelMoreEl.classList.toggle('is-panel-active', mode === 'more');
+          fabOpenChat.classList.toggle('is-hidden', !showList);
+
+          document.querySelectorAll('.app-tabbar button').forEach(function (btn) {
+            var btm = btn.getAttribute('data-bottom');
+            var act = false;
+            if (showList && (btm === 'home' || btm === 'chats')) {
+              act =
+                (listTabFromBottom === 'home' && btm === 'home') ||
+                (listTabFromBottom !== 'home' && btm === 'chats');
+            } else if (mode === 'feed' && btm === 'feed') act = true;
+            else if (mode === 'more' && btm === 'more') act = true;
+            btn.classList.toggle('is-active', act);
+          });
+
+          if (mode === 'feed') renderApplianceSwitches();
+          if (mode === 'more') initMoreBuilderOnce();
+          if (showList) renderChatList();
+        }
+
+        function feedStatusLabel(a) {
+          if (!a.owned) return '尚未擁有此設備';
+          refreshDevicePreview(a);
+          if (deviceIsAc(a) || deviceIsFan(a)) return previewById[a.id] || a.name;
+          return appliancePower[a.id] ? '電源開啟' : '電源關閉';
+        }
+
+        function setFeedViewMode(mode) {
+          feedViewMode = mode === 'card' ? 'card' : 'list';
+          var listBtn = document.getElementById('feedViewListBtn');
+          var cardBtn = document.getElementById('feedViewCardBtn');
+          if (listBtn) {
+            listBtn.classList.toggle('is-active', feedViewMode === 'list');
+            listBtn.setAttribute('aria-selected', feedViewMode === 'list' ? 'true' : 'false');
+          }
+          if (cardBtn) {
+            cardBtn.classList.toggle('is-active', feedViewMode === 'card');
+            cardBtn.setAttribute('aria-selected', feedViewMode === 'card' ? 'true' : 'false');
+          }
+          renderApplianceSwitches();
+        }
+
+        function bindFeedViewTabsOnce() {
+          if (feedViewTabsBound) return;
+          feedViewTabsBound = true;
+          var listBtn = document.getElementById('feedViewListBtn');
+          var cardBtn = document.getElementById('feedViewCardBtn');
+          if (listBtn) listBtn.addEventListener('click', function () { setFeedViewMode('list'); });
+          if (cardBtn) cardBtn.addEventListener('click', function () { setFeedViewMode('card'); });
+        }
+
+        function createFeedPowerSwitch(a, onAfterChange) {
+          var lbl = document.createElement('label');
+          lbl.className = 'feed-switch';
+          var inp = document.createElement('input');
+          inp.type = 'checkbox';
+          inp.checked = !!appliancePower[a.id];
+          inp.disabled = !a.owned;
+          inp.setAttribute('aria-label', a.name + ' 開關');
+          inp.addEventListener('change', function () {
+            appliancePower[a.id] = inp.checked;
+            if (deviceIsFan(a)) {
+              if (inp.checked && ensureFanLevel(a.id) <= 0) applianceFanLevel[a.id] = 2;
+              if (!inp.checked) applianceFanLevel[a.id] = 0;
+            }
+            if (onAfterChange) onAfterChange();
+            renderChatList();
+          });
+          var track = document.createElement('span');
+          track.className = 'feed-switch__track';
+          var thumb = document.createElement('span');
+          thumb.className = 'feed-switch__thumb';
+          track.appendChild(thumb);
+          lbl.appendChild(inp);
+          lbl.appendChild(track);
+          return { label: lbl, input: inp };
+        }
+
+        function appendFeedAcControls(a, bodyEl, ui) {
+          var temps = [22, 24, 26, 28, 30];
+          var label = document.createElement('p');
+          label.className = 'feed-ctrl-label';
+          label.textContent = '溫度';
+          bodyEl.appendChild(label);
+          var row = document.createElement('div');
+          row.className = 'feed-chip-row';
+          bodyEl.appendChild(row);
+
+          function paintChips() {
+            var cur = ensureAcTemp(a.id);
+            row.innerHTML = '';
+            for (var i = 0; i < temps.length; i++) {
+              (function (t) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'feed-chip' + (cur === t && appliancePower[a.id] ? ' is-on' : '');
+                b.textContent = t + '°';
+                b.disabled = !a.owned;
+                b.addEventListener('click', function () {
+                  applianceAcTemp[a.id] = t;
+                  appliancePower[a.id] = true;
+                  if (ui.powerInput) ui.powerInput.checked = true;
+                  if (ui.onRefresh) ui.onRefresh();
+                  renderChatList();
+                });
+                row.appendChild(b);
+              })(temps[i]);
+            }
+          }
+
+          paintChips();
+          ui.refreshAcChips = paintChips;
+
+          if (ui.showRange) {
+            var wrap = document.createElement('div');
+            wrap.className = 'feed-range-wrap';
+            var range = document.createElement('input');
+            range.type = 'range';
+            range.min = '16';
+            range.max = '30';
+            range.step = '1';
+            range.value = String(ensureAcTemp(a.id));
+            range.disabled = !a.owned;
+            range.setAttribute('aria-label', a.name + ' 溫度微調');
+            var val = document.createElement('span');
+            val.className = 'feed-range-val';
+            val.textContent = ensureAcTemp(a.id) + '°C';
+            range.addEventListener('input', function () {
+              var tv = parseInt(range.value, 10);
+              applianceAcTemp[a.id] = tv;
+              appliancePower[a.id] = true;
+              if (ui.powerInput) ui.powerInput.checked = true;
+              val.textContent = tv + '°C';
+              paintChips();
+              if (ui.onRefresh) ui.onRefresh();
+              renderChatList();
+            });
+            wrap.appendChild(range);
+            wrap.appendChild(val);
+            bodyEl.appendChild(wrap);
+            ui.acRange = range;
+            ui.acRangeVal = val;
+          }
+        }
+
+        function appendFeedFanControls(a, bodyEl, ui) {
+          var levels = [
+            { lv: 0, label: '關' },
+            { lv: 1, label: '低' },
+            { lv: 2, label: '中' },
+            { lv: 3, label: '高' },
+          ];
+          var label = document.createElement('p');
+          label.className = 'feed-ctrl-label';
+          label.textContent = '風速';
+          bodyEl.appendChild(label);
+          var row = document.createElement('div');
+          row.className = 'feed-chip-row';
+          bodyEl.appendChild(row);
+
+          function paintChips() {
+            var cur = appliancePower[a.id] ? Math.max(1, ensureFanLevel(a.id)) : 0;
+            row.innerHTML = '';
+            for (var i = 0; i < levels.length; i++) {
+              (function (item) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'feed-chip' + (cur === item.lv ? ' is-on' : '');
+                b.textContent = item.label;
+                b.disabled = !a.owned;
+                b.addEventListener('click', function () {
+                  applianceFanLevel[a.id] = item.lv;
+                  if (item.lv <= 0) {
+                    appliancePower[a.id] = false;
+                    if (ui.powerInput) ui.powerInput.checked = false;
+                  } else {
+                    appliancePower[a.id] = true;
+                    if (ui.powerInput) ui.powerInput.checked = true;
+                  }
+                  paintChips();
+                  if (ui.onRefresh) ui.onRefresh();
+                  renderChatList();
+                });
+                row.appendChild(b);
+              })(levels[i]);
+            }
+          }
+
+          paintChips();
+          ui.refreshFanChips = paintChips;
+        }
+
+        function buildFeedItem(a) {
+          var isCard = feedViewMode === 'card';
+          var root = document.createElement('article');
+          root.className = isCard ? 'feed-card' : 'feed-list-item';
+          root.setAttribute('role', 'listitem');
+          if (!a.owned) root.classList.add('is-unowned');
+          if (!a.owned || !appliancePower[a.id]) root.classList.add('is-off');
+
+          var head = document.createElement('div');
+          head.className = isCard ? 'feed-card__head' : 'feed-list-item__head';
+
+          var icon = document.createElement('div');
+          icon.className = isCard ? 'feed-card__icon' : 'feed-list-item__icon';
+          icon.textContent = deviceIconForAppliance(a);
+          icon.setAttribute('aria-hidden', 'true');
+
+          var meta = document.createElement('div');
+          meta.className = isCard ? 'feed-card__meta' : 'feed-list-item__meta';
+
+          var nameEl = document.createElement('h3');
+          nameEl.className = isCard ? 'feed-card__name' : 'feed-list-item__name';
+          nameEl.textContent = a.name;
+
+          var statusEl = document.createElement('p');
+          statusEl.className = isCard ? 'feed-card__status' : 'feed-list-item__status';
+
+          var ui = { powerInput: null, showRange: !isCard };
+
+          function refreshShell() {
+            var on = !!appliancePower[a.id] && a.owned;
+            statusEl.textContent = feedStatusLabel(a);
+            statusEl.classList.toggle('is-on', on);
+            root.classList.toggle('is-off', !a.owned || !appliancePower[a.id]);
+            if (ui.refreshAcChips) ui.refreshAcChips();
+            if (ui.refreshFanChips) ui.refreshFanChips();
+            if (ui.acRange) ui.acRange.value = String(ensureAcTemp(a.id));
+            if (ui.acRangeVal) ui.acRangeVal.textContent = ensureAcTemp(a.id) + '°C';
+          }
+
+          ui.onRefresh = refreshShell;
+
+          var sw = createFeedPowerSwitch(a, refreshShell);
+          ui.powerInput = sw.input;
+
+          if (isCard) {
+            meta.appendChild(nameEl);
+            var headTop = document.createElement('div');
+            headTop.className = 'feed-card__head-top';
+            headTop.appendChild(icon);
+            headTop.appendChild(meta);
+            var headFoot = document.createElement('div');
+            headFoot.className = 'feed-card__head-foot';
+            headFoot.appendChild(statusEl);
+            headFoot.appendChild(sw.label);
+            head.appendChild(headTop);
+            head.appendChild(headFoot);
+          } else {
+            meta.appendChild(nameEl);
+            meta.appendChild(statusEl);
+            head.appendChild(icon);
+            head.appendChild(meta);
+            head.appendChild(sw.label);
+          }
+
+          root.appendChild(head);
+
+          refreshShell();
+
+          if (a.owned && (deviceIsAc(a) || deviceIsFan(a))) {
+            var body = document.createElement('div');
+            body.className = isCard ? 'feed-card__body' : 'feed-list-item__body';
+            if (deviceIsAc(a)) appendFeedAcControls(a, body, ui);
+            if (deviceIsFan(a)) appendFeedFanControls(a, body, ui);
+            root.appendChild(body);
+          } else if (!a.owned && (deviceIsAc(a) || deviceIsFan(a))) {
+            var note = document.createElement('p');
+            note.className = 'feed-unowned-note';
+            note.textContent = '擁有設備後可調整溫度與風速';
+            root.appendChild(note);
+          }
+
+          return root;
+        }
+
+        function renderApplianceSwitches() {
+          bindFeedViewTabsOnce();
+          applianceSwitchListEl.classList.toggle('ln-feed-scroll--list', feedViewMode === 'list');
+          applianceSwitchListEl.classList.toggle('ln-feed-scroll--card', feedViewMode === 'card');
+          applianceSwitchListEl.innerHTML = '';
+          applianceFriends.forEach(function (a) {
+            applianceSwitchListEl.appendChild(buildFeedItem(a));
+          });
+        }
+
+        function lastSnippetForThread(tid) {
+          var arr = messagesByThread[tid];
+          if (!arr || !arr.length) return '尚未有訊息';
+          var m = arr[arr.length - 1];
+          var prefix = m.role === 'owner' ? '你：' : m.senderName + '：';
+          return prefix + m.text;
+        }
+
+        function lastTimeForThread(tid) {
+          var arr = messagesByThread[tid];
+          if (!arr || !arr.length) return '--:--';
+          return formatAmpm(arr[arr.length - 1].createdAtMs);
+        }
+
+        function openChatThread(threadId) {
+          currentThreadId = threadId;
+          ensureThread(threadId);
+          showView('chat');
+        }
+
+        function refreshChatChrome() {
+          var titleEl = document.getElementById('chatTopTitle');
+          if (titleEl) titleEl.textContent = threadTitle(currentThreadId);
+          var names = buildParticipantsForThread(currentThreadId).map(function (p) {
+            return p.name;
+          });
+          subtitleEl.textContent = names.join(' · ');
+          subtitleEl.title = subtitleEl.textContent;
+        }
+
+        function formatAmpm(ms) {
+          return new Date(ms).toLocaleTimeString('zh-TW', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true,
+          });
+        }
+
+        /** LINE 預設空頭貼（淡綠底＋灰剪影） */
+        function blankAvatarEl() {
+          var d = document.createElement('div');
+          d.className = 'ln-avatar ln-avatar--blank';
+          d.innerHTML =
+            '<svg viewBox="0 0 64 64" aria-hidden="true"><circle cx="32" cy="24" r="12" fill="#9aab9f"/><ellipse cx="32" cy="52" rx="22" ry="14" fill="#9aab9f"/></svg>';
+          return d;
+        }
+
+        function showView(which) {
+          var onHome = which === 'home';
+          viewHomeEl.classList.toggle('is-active', onHome);
+          viewChatEl.classList.toggle('is-active', !onHome);
+          if (!onHome) {
+            refreshChatChrome();
+            renderAll();
+            scrollToBottom();
+            inputEl.focus();
+          } else {
+            setBottomPanel(bottomPanelMode);
+          }
+        }
+
+        function rowMatchesQuery(name, preview, q) {
+          if (!q) return true;
+          var s = (name + ' ' + preview).toLowerCase();
+          return s.indexOf(q) !== -1;
+        }
+
+        function renderChatList() {
+          var q = (chatSearchInput.value || '').trim().toLowerCase();
+          lineChatListEl.innerHTML = '';
+
+          function pushMain(arr) {
+            arr.push({
+              kind: 'main',
+              threadId: MAIN_GROUP_ID,
+              name: '智慧居家協作總群',
+              meta: '(' + memberCountForThread(MAIN_GROUP_ID) + ')',
+              preview: lastSnippetForThread(MAIN_GROUP_ID),
+              time: lastTimeForThread(MAIN_GROUP_ID),
+              unread: 3,
+            });
+          }
+
+          function pushZones(arr) {
+            for (var zi = 0; zi < ZONE_ORDER.length; zi++) {
+              var zid = ZONE_ORDER[zi];
+              var sp = getSpace(zid);
+              if (!sp) continue;
+              arr.push({
+                kind: 'space',
+                threadId: zid,
+                name: sp.name + ' 群組',
+                meta: '(' + memberCountForThread(zid) + ')',
+                preview: lastSnippetForThread(zid),
+                time: lastTimeForThread(zid),
+                unread: 0,
+              });
+            }
+          }
+
+          var items = [];
+
+          if (activeTab === 'all') {
+            pushMain(items);
+            pushZones(items);
+            applianceFriends.forEach(function (a) {
+              var pv = a.owned ? previewById[a.id] || '待機' : previewById[a.id] || '尚未連線此設備';
+              if (a.owned && !appliancePower[a.id]) {
+                pv = pv + ' · 電源關';
+              }
+              items.push({
+                kind: 'device',
+                threadId: a.id,
+                name: a.name,
+                owned: a.owned,
+                preview: pv,
+                time: lastTimeForThread(a.id),
+                unread: 0,
+              });
+            });
+          } else if (activeTab === 'appliances') {
+            applianceFriends.forEach(function (a) {
+              if (!a.owned) return;
+              var pv = previewById[a.id] || '待機';
+              if (!appliancePower[a.id]) {
+                pv = pv + ' · 電源關';
+              }
+              items.push({
+                kind: 'device',
+                threadId: a.id,
+                name: a.name,
+                owned: true,
+                preview: pv,
+                time: lastTimeForThread(a.id),
+                unread: 0,
+              });
+            });
+          } else if (activeTab === 'chats') {
+            pushMain(items);
+          } else if (activeTab === 'groups') {
+            pushMain(items);
+            pushZones(items);
+          }
+
+          items = items.filter(function (it) {
+            return rowMatchesQuery(it.name, it.preview, q);
+          });
+
+          items.forEach(function (it) {
+            var row = document.createElement('div');
+            row.className = 'ln-row';
+            if (it.kind === 'device' && !it.owned) {
+              row.classList.add('ln-row--mute');
+            }
+            row.setAttribute('role', 'listitem');
+
+            var avWrap;
+            if (it.kind === 'main' || it.kind === 'space') {
+              avWrap = document.createElement('div');
+              avWrap.className = 'ln-avatar ln-avatar--group';
+              avWrap.textContent = it.kind === 'main' ? '總' : it.name.charAt(0);
+              avWrap.setAttribute('aria-hidden', 'true');
+            } else if (it.owned) {
+              avWrap = deviceIconAvatarEl(getDevice(it.threadId));
+            } else {
+              avWrap = blankAvatarEl();
+            }
+
+            var body = document.createElement('div');
+            body.className = 'ln-row__body';
+            var top = document.createElement('div');
+            top.className = 'ln-row__top';
+            var nm = document.createElement('span');
+            nm.className = 'ln-row__name';
+            nm.textContent = it.name;
+            var meta = document.createElement('span');
+            meta.className = 'ln-row__meta';
+            meta.textContent = it.meta || '';
+            top.appendChild(nm);
+            if (it.meta) top.appendChild(meta);
+            var prev = document.createElement('div');
+            prev.className = 'ln-row__preview';
+            prev.textContent = it.preview;
+            body.appendChild(top);
+            body.appendChild(prev);
+
+            var right = document.createElement('div');
+            right.className = 'ln-row__right';
+            var tm = document.createElement('span');
+            tm.className = 'ln-row__time';
+            tm.textContent = it.time;
+            right.appendChild(tm);
+            if (it.unread) {
+              var badge = document.createElement('span');
+              badge.className = 'ln-unread';
+              badge.textContent = String(it.unread);
+              right.appendChild(badge);
+            }
+
+            row.appendChild(avWrap);
+            row.appendChild(body);
+            row.appendChild(right);
+
+            row.addEventListener('click', function () {
+              if (it.kind === 'device' && !it.owned) return;
+              openChatThread(it.threadId);
+            });
+
+            lineChatListEl.appendChild(row);
+          });
+        }
+
+        document.querySelectorAll('.ln-tab').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            activeTab = btn.getAttribute('data-tab') || 'all';
+            document.querySelectorAll('.ln-tab').forEach(function (b) {
+              b.classList.toggle('is-active', b === btn);
+            });
+            renderChatList();
+          });
+        });
+
+        chatSearchInput.addEventListener('input', function () {
+          renderChatList();
+        });
+
+        fabOpenChat.addEventListener('click', function () {
+          openChatThread(MAIN_GROUP_ID);
+        });
+
+        document.querySelectorAll('.app-tabbar button').forEach(function (btn) {
+          btn.addEventListener('click', function () {
+            var b = btn.getAttribute('data-bottom');
+            if (b === 'home') {
+              listTabFromBottom = 'home';
+              setLnTab(btn.getAttribute('data-default-tab') || 'all');
+              setBottomPanel('list');
+            } else if (b === 'chats') {
+              listTabFromBottom = 'chats';
+              setLnTab(btn.getAttribute('data-default-tab') || 'chats');
+              setBottomPanel('list');
+            } else if (b === 'feed') {
+              setBottomPanel('feed');
+            } else if (b === 'more') {
+              setBottomPanel('more');
+            }
+          });
+        });
+
+        function newId() {
+          if (typeof crypto !== 'undefined' && crypto.randomUUID) return crypto.randomUUID();
+          return 'm-' + Date.now() + '-' + Math.random().toString(16).slice(2);
+        }
+
+        function initMoreBuilderOnce() {
+          var scrollEl = document.getElementById('moreBuilderScroll');
+          if (!scrollEl || scrollEl.getAttribute('data-built') === '1') {
+            updateMorePreview();
+            return;
+          }
+          scrollEl.setAttribute('data-built', '1');
+
+          function addSection(title, cat, labels, multi) {
+            var sec = document.createElement('div');
+            sec.className = 'more-section';
+            var h = document.createElement('h3');
+            h.className = 'more-section__title';
+            h.textContent = title;
+            sec.appendChild(h);
+            var wrap = document.createElement('div');
+            wrap.className = 'more-chips';
+            for (var i = 0; i < labels.length; i++) {
+              var b = document.createElement('button');
+              b.type = 'button';
+              b.className = 'more-chip';
+              b.setAttribute('data-cat', cat);
+              b.setAttribute('data-multi', multi ? '1' : '0');
+              b.textContent = labels[i];
+              wrap.appendChild(b);
+            }
+            sec.appendChild(wrap);
+            scrollEl.appendChild(sec);
+          }
+
+          addSection('人', 'person', QUICK_PEOPLE, false);
+          addSection('事', 'event', QUICK_EVENTS, false);
+          addSection('時', 'time', QUICK_TIMES, false);
+          addSection('地', 'place', QUICK_PLACES, false);
+          addSection('物（誰照到你／觸發來源）', 'trigger', quickTriggerLabels(), false);
+          addSection('物（要開啟的設備，可複選）', 'action', quickActionLabels(), true);
+
+          scrollEl.addEventListener('click', function (e) {
+            var t = e.target;
+            if (!t.classList || !t.classList.contains('more-chip')) return;
+            var cat = t.getAttribute('data-cat');
+            var val = t.textContent;
+
+            if (cat === 'action') {
+              t.classList.toggle('is-on');
+              var idx = quickPick.actions.indexOf(val);
+              if (t.classList.contains('is-on')) {
+                if (idx < 0) quickPick.actions.push(val);
+              } else {
+                if (idx >= 0) quickPick.actions.splice(idx, 1);
+              }
+            } else {
+              var chips = t.parentNode.querySelectorAll('.more-chip');
+              for (var j = 0; j < chips.length; j++) {
+                chips[j].classList.remove('is-on');
+              }
+              t.classList.add('is-on');
+              if (cat === 'person') quickPick.person = val;
+              else if (cat === 'event') quickPick.event = val;
+              else if (cat === 'time') quickPick.time = val;
+              else if (cat === 'place') quickPick.place = val;
+              else if (cat === 'trigger') quickPick.trigger = val;
+            }
+            updateMorePreview();
+          });
+
+          document.getElementById('moreClearBtn').addEventListener('click', clearQuickPicks);
+
+          document.getElementById('moreSendBtn').addEventListener('click', function () {
+            if (!quickPick.actions.length) {
+              window.alert('請至少選一個「要開啟的設備」。');
+              return;
+            }
+            var text = composeQuickCommand();
+            currentThreadId = MAIN_GROUP_ID;
+            ensureThread(MAIN_GROUP_ID).push({
+              id: newId(),
+              senderId: OWNER_ID,
+              senderName: '主人',
+              role: 'owner',
+              text: text,
+              createdAtMs: Date.now(),
+            });
+            showView('chat');
+            refreshChatChrome();
+            renderAll();
+            renderChatList();
+          });
+
+          document.getElementById('moreFillBtn').addEventListener('click', function () {
+            openChatThread(MAIN_GROUP_ID);
+            inputEl.value = composeQuickCommand();
+            syncSendDisabled();
+          });
+
+          updateMorePreview();
+        }
+
+        function formatTime(ms) {
+          return new Date(ms).toLocaleTimeString('zh-TW', {
+            hour: '2-digit',
+            minute: '2-digit',
+          });
+        }
+
+        function bubbleRoleClass(role) {
+          if (role === 'manager') return 'bubble--manager';
+          if (role === 'device') return 'bubble--device';
+          return 'bubble--owner';
+        }
+
+        function renderOneMessage(m) {
+          var self = m.senderId === OWNER_ID;
+          var row = document.createElement('div');
+          row.className = 'msg-row ' + (self ? 'msg-row--self' : 'msg-row--other');
+
+          if (!self) {
+            var av = document.createElement('div');
+            av.className = 'msg-avatar';
+            if (m.role === 'device') {
+              var dPart = getDevice(m.senderId);
+              if (dPart) {
+                av.classList.add('msg-avatar--icon');
+                av.textContent = deviceIconForAppliance(dPart);
+              } else {
+                av.textContent = m.senderName.slice(0, 1);
+              }
+            } else if (m.role === 'manager') {
+              av.classList.add('msg-avatar--icon');
+              av.textContent = '🧠';
+            } else {
+              av.textContent = m.senderName.slice(0, 1);
+            }
+            av.title = m.senderName;
+            av.setAttribute('aria-hidden', 'true');
+            row.appendChild(av);
+          }
+
+          var stack = document.createElement('div');
+          stack.className = 'msg-stack';
+
+          if (!self) {
+            var sender = document.createElement('span');
+            sender.className = 'msg-sender';
+            sender.textContent = m.senderName;
+            stack.appendChild(sender);
+          }
+
+          var bubble = document.createElement('div');
+          bubble.className = 'bubble ' + bubbleRoleClass(m.role);
+
+          var p = document.createElement('p');
+          p.className = 'bubble__text';
+          p.textContent = m.text;
+
+          var timeEl = document.createElement('time');
+          timeEl.className = 'bubble__time';
+          timeEl.dateTime = new Date(m.createdAtMs).toISOString();
+          timeEl.textContent = formatTime(m.createdAtMs);
+
+          bubble.appendChild(p);
+          bubble.appendChild(timeEl);
+          stack.appendChild(bubble);
+          row.appendChild(stack);
+          listEl.appendChild(row);
+        }
+
+        function scrollToBottom() {
+          listEl.scrollTop = listEl.scrollHeight;
+        }
+
+        function renderAll() {
+          listEl.innerHTML = '';
+          var msgs = ensureThread(currentThreadId);
+          if (!msgs.length) {
+            var empty = document.createElement('p');
+            empty.className = 'message-list__empty';
+            empty.textContent = '尚無訊息，傳一則指令試試看。';
+            listEl.appendChild(empty);
+            return;
+          }
+          msgs.forEach(renderOneMessage);
+          scrollToBottom();
+        }
+
+        function syncSendDisabled() {
+          var trimmed = inputEl.value.trim();
+          sendBtn.disabled = trimmed.length === 0;
+        }
+
+        /**
+         * 解析總群自然語句，更新冷氣／風扇狀態。無法判讀時回傳空字串。
+         */
+        function applyFuzzyHomeCommand(raw) {
+          var textNarrow = raw.replace(/\s/g, '');
+          if (!textNarrow) return '';
+
+          function detectZoneIds() {
+            if (/全家|全宅|所有空間|整個家|每個房/.test(textNarrow)) return ['*'];
+            var ids = [];
+            if (/主臥|主人房|臥室/.test(textNarrow)) ids.push('g-master');
+            if (/客廳/.test(textNarrow)) ids.push('g-living');
+            if (/廚房/.test(textNarrow)) ids.push('g-kitchen');
+            if (/客房/.test(textNarrow)) ids.push('g-guest');
+            if (/書房/.test(textNarrow)) ids.push('g-study');
+            return ids.length ? ids : ['*'];
+          }
+
+          function targetsAcFan(zoneIds) {
+            var all = zoneIds.indexOf('*') >= 0;
+            var out = [];
+            for (var i = 0; i < applianceFriends.length; i++) {
+              var a = applianceFriends[i];
+              if (!a.owned || (!deviceIsAc(a) && !deviceIsFan(a))) continue;
+              if (all) {
+                out.push(a);
+                continue;
+              }
+              var ok = false;
+              for (var j = 0; j < a.spaces.length; j++) {
+                if (zoneIds.indexOf(a.spaces[j]) >= 0) {
+                  ok = true;
+                  break;
+                }
+              }
+              if (ok) out.push(a);
+            }
+            return out;
+          }
+
+          var zoneIds = detectZoneIds();
+          var targets = targetsAcFan(zoneIds);
+          if (!targets.length) return '';
+
+          var fanOff =
+            /風扇(?:關|停)|關(?:掉|閉)?(?:了)?風扇|把風扇(?:關|停)|電風扇(?:關|停)/.test(textNarrow) ||
+            /別(?:再)?吹(?:風)?/.test(textNarrow);
+          var fanLower =
+            /風扇(?:小|低|弱)|風速(?:小|低|弱)|變小|再小一點/.test(textNarrow) ||
+            /風扇(?:調|降)低/.test(textNarrow);
+          var fanHigher =
+            /風扇(?:大|強)|風速(?:大|高|強)|開強/.test(textNarrow) || /風扇(?:調|升)高/.test(textNarrow);
+          var fanOn = /風扇開|開風扇|電風扇開|把風扇打開/.test(textNarrow);
+
+          var acOff =
+            /冷氣(?:關|停)|關(?:掉|閉)?(?:了)?冷氣|把冷氣(?:關|停)/.test(textNarrow);
+          var acOn = /冷氣開|開冷氣|把冷氣打開/.test(textNarrow);
+
+          var tempUpWord =
+            /調高(?:溫|度)?|溫度(?:往上|調高)|熱一點|暖一點|升高(?:溫)?|再熱/.test(textNarrow);
+          var tempDownWord =
+            /調低(?:溫|度)?|溫度(?:往下|調低)|冷一點|降溫|再涼|再冷/.test(textNarrow);
+
+          var coldFeel =
+            /好冷|太冷|冷死|覺得冷|覺得(?:很|好)?冷|有點冷|偏冷|發冷|凍|好涼|著涼/.test(textNarrow) ||
+            /冷氣太強|風太強|風扇.*冷|一直吹/.test(textNarrow);
+          var hotFeel =
+            /好熱|太熱|熱死|覺得熱|覺得(?:很|好)?熱|有點熱|偏熱|悶熱|好悶|流汗/.test(textNarrow);
+
+          var hasExplicit =
+            fanOff ||
+            fanLower ||
+            fanHigher ||
+            fanOn ||
+            acOff ||
+            acOn ||
+            tempUpWord ||
+            tempDownWord;
+
+          var lines = [];
+
+          function lineFanState(a) {
+            if (!appliancePower[a.id]) return '已關閉「' + a.name + '」';
+            var lv = ensureFanLevel(a.id);
+            var lab = ['關閉', '低速', '中速', '高速'][Math.max(1, lv)];
+            return '「' + a.name + '」目前：' + lab;
+          }
+
+          function lineAcState(a) {
+            if (!appliancePower[a.id]) return '已關閉「' + a.name + '」';
+            return '「' + a.name + '」已設為 ' + ensureAcTemp(a.id) + '°C';
+          }
+
+          for (var ti = 0; ti < targets.length; ti++) {
+            var dev = targets[ti];
+            var id = dev.id;
+            if (deviceIsFan(dev)) {
+              if (fanOff) {
+                appliancePower[id] = false;
+                applianceFanLevel[id] = 0;
+                lines.push('已關閉「' + dev.name + '」');
+              } else if (fanLower) {
+                if (!appliancePower[id]) {
+                  lines.push('「' + dev.name + '」本就關閉');
+                } else {
+                  var lv1 = ensureFanLevel(id);
+                  if (lv1 <= 1) {
+                    appliancePower[id] = false;
+                    applianceFanLevel[id] = 0;
+                    lines.push('已將「' + dev.name + '」關閉（已是最低風）');
+                  } else {
+                    applianceFanLevel[id] = lv1 - 1;
+                    lines.push('已將「' + dev.name + '」風速降為 ' + ['', '低', '中', '高'][applianceFanLevel[id]] + '速');
+                  }
+                }
+              } else if (fanHigher) {
+                appliancePower[id] = true;
+                var lv2 = ensureFanLevel(id);
+                applianceFanLevel[id] = lv2 <= 0 ? 2 : Math.min(3, lv2 + 1);
+                lines.push(lineFanState(dev));
+              } else if (fanOn) {
+                appliancePower[id] = true;
+                if (ensureFanLevel(id) <= 0) applianceFanLevel[id] = 2;
+                lines.push(lineFanState(dev));
+              }
+            }
+            if (deviceIsAc(dev)) {
+              if (acOff) {
+                appliancePower[id] = false;
+                lines.push('已關閉「' + dev.name + '」');
+              } else if (acOn) {
+                appliancePower[id] = true;
+                lines.push(lineAcState(dev));
+              } else if (tempUpWord) {
+                appliancePower[id] = true;
+                var nt = Math.min(30, ensureAcTemp(id) + 2);
+                applianceAcTemp[id] = nt;
+                lines.push(lineAcState(dev));
+              } else if (tempDownWord) {
+                appliancePower[id] = true;
+                var nt2 = Math.max(16, ensureAcTemp(id) - 2);
+                applianceAcTemp[id] = nt2;
+                lines.push(lineAcState(dev));
+              }
+            }
+          }
+
+          if (!hasExplicit) {
+            if (coldFeel) {
+              for (var cj = 0; cj < targets.length; cj++) {
+                var d2 = targets[cj];
+                var id2 = d2.id;
+                if (deviceIsFan(d2) && appliancePower[id2]) {
+                  appliancePower[id2] = false;
+                  applianceFanLevel[id2] = 0;
+                  lines.push('已關閉「' + d2.name + '」（覺得冷先停風）');
+                }
+                if (deviceIsAc(d2) && appliancePower[id2]) {
+                  var up = Math.min(30, ensureAcTemp(id2) + 2);
+                  applianceAcTemp[id2] = up;
+                  lines.push('已將「' + d2.name + '」調高至 ' + up + '°C（減少製冷）');
+                }
+              }
+            } else if (hotFeel) {
+              for (var hj = 0; hj < targets.length; hj++) {
+                var d3 = targets[hj];
+                var id3 = d3.id;
+                if (deviceIsFan(d3)) {
+                  appliancePower[id3] = true;
+                  var lv3 = ensureFanLevel(id3);
+                  applianceFanLevel[id3] = lv3 <= 0 ? 3 : Math.min(3, lv3 + 1);
+                  lines.push(lineFanState(d3) + '（加強循環）');
+                }
+                if (deviceIsAc(d3)) {
+                  appliancePower[id3] = true;
+                  var dn = Math.max(16, ensureAcTemp(id3) - 2);
+                  applianceAcTemp[id3] = dn;
+                  lines.push('已將「' + d3.name + '」調低至 ' + dn + '°C');
+                }
+              }
+            }
+          }
+
+          if (!lines.length) return '';
+
+          for (var ri = 0; ri < targets.length; ri++) {
+            refreshDevicePreview(targets[ri]);
+          }
+
+          var zoneLabel =
+            zoneIds.indexOf('*') >= 0
+              ? '全部相關空間'
+              : zoneIds
+                  .map(function (zid) {
+                    var sp = getSpace(zid);
+                    return sp ? sp.name : zid;
+                  })
+                  .join('、');
+          return '【' + zoneLabel + '】' + lines.join('；');
+        }
+
+        function trySend() {
+          var t = inputEl.value.trim();
+          if (!t) return;
+          ensureThread(currentThreadId).push({
+            id: newId(),
+            senderId: OWNER_ID,
+            senderName: '主人',
+            role: 'owner',
+            text: t,
+            createdAtMs: Date.now(),
+          });
+          if (currentThreadId === MAIN_GROUP_ID) {
+            var fuzzyText = applyFuzzyHomeCommand(t);
+            if (fuzzyText) {
+              ensureThread(MAIN_GROUP_ID).push({
+                id: newId(),
+                senderId: 'a-manager',
+                senderName: 'Manager AI',
+                role: 'manager',
+                text: fuzzyText,
+                createdAtMs: Date.now(),
+              });
+            }
+          }
+          inputEl.value = '';
+          syncSendDisabled();
+          inputEl.focus();
+          renderAll();
+          renderChatList();
+          if (bottomPanelMode === 'feed') renderApplianceSwitches();
+        }
+
+        inputEl.addEventListener('input', syncSendDisabled);
+
+        inputEl.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            if (!sendBtn.disabled) trySend();
+          }
+        });
+
+        formEl.addEventListener('submit', function (e) {
+          e.preventDefault();
+          trySend();
+        });
+
+        backHomeBtn.addEventListener('click', function () {
+          showView('home');
+        });
+
+        var statusTimeEl = document.getElementById('statusTime');
+        function tickStatusBar() {
+          if (!statusTimeEl) return;
+          var d = new Date();
+          statusTimeEl.textContent = d.toLocaleTimeString('zh-TW', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false,
+          });
+        }
+        tickStatusBar();
+        setInterval(tickStatusBar, 15000);
+
+        setLnTab(activeTab);
+        setBottomPanel('list');
+        renderAll();
+      })();
+    </script>
+  </body>
+</html>
