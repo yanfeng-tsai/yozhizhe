@@ -1280,19 +1280,256 @@
         border-bottom-left-radius: var(--radius-sm);
       }
 
+      .bubble--typing {
+        background: var(--manager-bg);
+        border: 1px solid var(--manager-border);
+        border-bottom-left-radius: var(--radius-sm);
+        min-width: 120px;
+      }
+
+      .bubble--pending {
+        background: #eceff3;
+        border: 1px solid #d5dbe3;
+        color: #5c6570;
+        border-bottom-left-radius: var(--radius-sm);
+      }
+
+      .bubble--success {
+        background: #e8f8ee;
+        border: 1px solid #b8e6c8;
+        color: #0a6b38;
+        border-bottom-left-radius: var(--radius-sm);
+      }
+
+      .bubble--warning {
+        background: #fff4e5;
+        border: 1px solid #ffd08a;
+        color: #8a5a00;
+        border-bottom-left-radius: var(--radius-sm);
+      }
+
+      .bubble--cancelled {
+        background: #f3f4f6;
+        border: 1px solid #d5dade;
+        color: #6b7280;
+        border-bottom-left-radius: var(--radius-sm);
+      }
+
+      .bubble--cancelled .bubble__text {
+        text-decoration: line-through;
+        text-decoration-color: rgba(0, 0, 0, 0.3);
+      }
+
+      .bubble--alert {
+        background: #fff0f0;
+        border: 1px solid #f5b5b5;
+        color: #b42318;
+        border-bottom-left-radius: var(--radius-sm);
+      }
+
+      .bubble--alert .bubble__text {
+        font-weight: 600;
+      }
+
+      .bubble__body-switchable {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .bubble__json {
+        margin: 0;
+        padding: 10px;
+        border-radius: 8px;
+        background: #1e2430;
+        color: #e8edf5;
+        font-size: 11px;
+        line-height: 1.45;
+        overflow-x: auto;
+        white-space: pre;
+        font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+        max-height: 220px;
+      }
+
+      .bubble__json-toggle {
+        align-self: flex-start;
+        border: none;
+        background: rgba(6, 199, 85, 0.12);
+        color: #067a38;
+        font-size: 11px;
+        font-weight: 600;
+        padding: 5px 10px;
+        border-radius: 999px;
+        cursor: pointer;
+        margin-top: 2px;
+      }
+
+      .bubble__json-toggle:hover {
+        background: rgba(6, 199, 85, 0.22);
+      }
+
+      .bubble--alert .bubble__json-toggle {
+        background: rgba(180, 35, 24, 0.1);
+        color: #b42318;
+      }
+
+      .bubble--alert .bubble__json-toggle:hover {
+        background: rgba(180, 35, 24, 0.18);
+      }
+
+      .composer-quick__chip--alert {
+        border-color: #f5b5b5;
+        background: #fff5f5;
+        color: #b42318;
+      }
+
+      .composer-quick__chip--alert:hover:not(:disabled) {
+        border-color: #e88;
+        background: #ffecec;
+      }
+
+      .typing-indicator {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .typing-indicator__label {
+        font-size: 14px;
+        font-weight: 600;
+        color: #2d5a3d;
+      }
+
+      .typing-dots {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        height: 18px;
+      }
+
+      .typing-dots span {
+        width: 7px;
+        height: 7px;
+        border-radius: 50%;
+        background: var(--ln-green);
+        animation: typing-bounce 1.2s ease-in-out infinite;
+      }
+
+      .typing-dots span:nth-child(2) {
+        animation-delay: 0.15s;
+      }
+
+      .typing-dots span:nth-child(3) {
+        animation-delay: 0.3s;
+      }
+
+      @keyframes typing-bounce {
+        0%,
+        60%,
+        100% {
+          transform: translateY(0);
+          opacity: 0.45;
+        }
+        30% {
+          transform: translateY(-5px);
+          opacity: 1;
+        }
+      }
+
       .msg-row--self .bubble {
         border-bottom-right-radius: var(--radius-sm);
         border-bottom-left-radius: var(--radius-lg);
       }
 
-      .composer {
+      .chat-composer-wrap {
         flex-shrink: 0;
         background: var(--ln-bg);
         border-top: 1px solid var(--ln-line);
+      }
+
+      .composer-quick {
+        display: flex;
+        gap: 8px;
+        padding: 10px 12px 0;
+        overflow-x: auto;
+        overflow-y: hidden;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+
+      .composer-quick::-webkit-scrollbar {
+        display: none;
+      }
+
+      .composer-quick__chip {
+        flex: 0 0 auto;
+        border: 1px solid var(--ln-line);
+        background: var(--ln-bg-soft);
+        color: var(--ln-text);
+        font-size: 12px;
+        font-weight: 600;
+        padding: 8px 14px;
+        border-radius: 999px;
+        cursor: pointer;
+        white-space: nowrap;
+        transition: background 0.15s, border-color 0.15s;
+      }
+
+      .composer-quick__chip:hover:not(:disabled) {
+        border-color: #b8dfc8;
+        background: #f0faf4;
+      }
+
+      .composer-quick__chip:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .composer {
         padding: 10px 12px calc(10px + env(safe-area-inset-bottom));
         display: flex;
         gap: 8px;
         align-items: flex-end;
+      }
+
+      .composer__mic {
+        flex-shrink: 0;
+        width: 44px;
+        height: 44px;
+        border: 1px solid var(--ln-line);
+        border-radius: 12px;
+        background: var(--ln-bg-soft);
+        font-size: 20px;
+        line-height: 1;
+        cursor: pointer;
+        padding: 0;
+      }
+
+      .composer__mic:hover:not(:disabled) {
+        background: #eef8f1;
+        border-color: #b8dfc8;
+      }
+
+      .composer__mic.is-listening {
+        background: #ffe8e8;
+        border-color: #f5a5a5;
+        animation: mic-pulse 1s ease-in-out infinite;
+      }
+
+      .composer__mic:disabled {
+        opacity: 0.45;
+        cursor: not-allowed;
+      }
+
+      @keyframes mic-pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(255, 80, 80, 0.35);
+        }
+        50% {
+          box-shadow: 0 0 0 6px rgba(255, 80, 80, 0);
+        }
       }
 
       .composer__input {
@@ -1487,8 +1724,18 @@
 
         <div class="message-list" id="messageList" role="log" aria-live="polite" aria-relevant="additions"></div>
 
-        <div>
+        <div class="chat-composer-wrap">
+          <div class="composer-quick" id="composerQuickChips" aria-label="快速指令"></div>
           <form class="composer" id="composerForm" autocomplete="off">
+            <button
+              type="button"
+              class="composer__mic"
+              id="voiceBtn"
+              title="語音輸入"
+              aria-label="語音輸入"
+            >
+              🎤
+            </button>
             <textarea
               id="msgInput"
               class="composer__input"
@@ -1752,6 +1999,25 @@
         var formEl = document.getElementById('composerForm');
         var inputEl = document.getElementById('msgInput');
         var sendBtn = document.getElementById('sendBtn');
+        var voiceBtn = document.getElementById('voiceBtn');
+        var composerQuickEl = document.getElementById('composerQuickChips');
+        var isAiProcessing = false;
+        var speechRecognition = null;
+        var isListening = false;
+
+        var QUICK_DEMO_CHIPS = [
+          { label: '🐕 狗在抓門', text: '狗在抓門，幫我開大門' },
+          { label: '🌙 啟動夜間防護', text: '啟動夜間防護模式' },
+          { label: '❄️ 覺得有點悶熱', text: '我覺得有點悶熱' },
+          { label: '🥶 主臥好冷', text: '我覺得主臥好冷' },
+          {
+            label: '🚨 測試異常攔截',
+            text: '關閉空調並啟動紫外線消毒',
+            variant: 'alert',
+          },
+        ];
+
+        var UV_DEMO_DEVICE_ID = 'd-uv-demo';
 
         var activeTab = 'chats';
         var bottomPanelMode = 'list';
@@ -2562,10 +2828,51 @@
           return 'bubble--owner';
         }
 
+        function bubbleClassForMessage(m) {
+          if (m.msgKind === 'typing') return 'bubble--typing';
+          if (m.msgKind === 'alert') return 'bubble--alert';
+          if (m.status === 'pending') return 'bubble--pending';
+          if (m.status === 'warning') return 'bubble--warning';
+          if (m.status === 'cancelled') return 'bubble--cancelled';
+          if (m.status === 'success') return 'bubble--success';
+          return bubbleRoleClass(m.role);
+        }
+
+        function appendManagerSwitchableContent(bubble, m) {
+          var wrap = document.createElement('div');
+          wrap.className = 'bubble__body-switchable';
+
+          var naturalP = document.createElement('p');
+          naturalP.className = 'bubble__text bubble__text--natural';
+          naturalP.textContent = m.text;
+          naturalP.hidden = !!m.showJson;
+
+          var jsonPre = document.createElement('pre');
+          jsonPre.className = 'bubble__json';
+          jsonPre.textContent = JSON.stringify(m.intentPayload, null, 2);
+          jsonPre.hidden = !m.showJson;
+
+          wrap.appendChild(naturalP);
+          wrap.appendChild(jsonPre);
+
+          var toggleBtn = document.createElement('button');
+          toggleBtn.type = 'button';
+          toggleBtn.className = 'bubble__json-toggle';
+          toggleBtn.textContent = m.showJson ? '查看口語回覆' : '</> 查看底層解析';
+          toggleBtn.addEventListener('click', function () {
+            updateMessageFields(currentThreadId, m.id, { showJson: !m.showJson });
+            renderAll();
+          });
+          wrap.appendChild(toggleBtn);
+
+          bubble.appendChild(wrap);
+        }
+
         function renderOneMessage(m) {
           var self = m.senderId === OWNER_ID;
           var row = document.createElement('div');
           row.className = 'msg-row ' + (self ? 'msg-row--self' : 'msg-row--other');
+          if (m.id) row.setAttribute('data-msg-id', m.id);
 
           if (!self) {
             var av = document.createElement('div');
@@ -2600,18 +2907,41 @@
           }
 
           var bubble = document.createElement('div');
-          bubble.className = 'bubble ' + bubbleRoleClass(m.role);
+          bubble.className = 'bubble ' + bubbleClassForMessage(m);
 
-          var p = document.createElement('p');
-          p.className = 'bubble__text';
-          p.textContent = m.text;
+          if (m.msgKind === 'typing') {
+            var typingWrap = document.createElement('div');
+            typingWrap.className = 'typing-indicator';
+            var typingLabel = document.createElement('span');
+            typingLabel.className = 'typing-indicator__label';
+            typingLabel.textContent = '🧠 意圖解析中';
+            var typingDots = document.createElement('span');
+            typingDots.className = 'typing-dots';
+            typingDots.setAttribute('aria-hidden', 'true');
+            for (var di = 0; di < 3; di++) {
+              typingDots.appendChild(document.createElement('span'));
+            }
+            typingWrap.appendChild(typingLabel);
+            typingWrap.appendChild(typingDots);
+            bubble.appendChild(typingWrap);
+          } else if (
+            m.role === 'manager' &&
+            m.intentPayload &&
+            m.msgKind !== 'typing'
+          ) {
+            appendManagerSwitchableContent(bubble, m);
+          } else {
+            var p = document.createElement('p');
+            p.className = 'bubble__text';
+            p.textContent = m.text;
+            bubble.appendChild(p);
+          }
 
           var timeEl = document.createElement('time');
           timeEl.className = 'bubble__time';
           timeEl.dateTime = new Date(m.createdAtMs).toISOString();
           timeEl.textContent = formatTime(m.createdAtMs);
 
-          bubble.appendChild(p);
           bubble.appendChild(timeEl);
           stack.appendChild(bubble);
           row.appendChild(stack);
@@ -2636,9 +2966,534 @@
           scrollToBottom();
         }
 
+        function pushChatMessage(threadId, msg) {
+          ensureThread(threadId).push(msg);
+        }
+
+        function findMessageIndex(threadId, msgId) {
+          var arr = ensureThread(threadId);
+          for (var i = 0; i < arr.length; i++) {
+            if (arr[i].id === msgId) return i;
+          }
+          return -1;
+        }
+
+        function removeMessageById(threadId, msgId) {
+          var idx = findMessageIndex(threadId, msgId);
+          if (idx >= 0) ensureThread(threadId).splice(idx, 1);
+        }
+
+        function updateMessageFields(threadId, msgId, fields) {
+          var idx = findMessageIndex(threadId, msgId);
+          if (idx < 0) return;
+          var msg = ensureThread(threadId)[idx];
+          for (var key in fields) {
+            if (Object.prototype.hasOwnProperty.call(fields, key)) msg[key] = fields[key];
+          }
+        }
+
+        function setComposerBusy(busy) {
+          isAiProcessing = busy;
+          var trimmed = inputEl.value.trim();
+          sendBtn.disabled = busy || trimmed.length === 0;
+          if (voiceBtn) voiceBtn.disabled = busy;
+          if (composerQuickEl) {
+            var chips = composerQuickEl.querySelectorAll('.composer-quick__chip');
+            for (var ci = 0; ci < chips.length; ci++) chips[ci].disabled = busy;
+          }
+        }
+
         function syncSendDisabled() {
           var trimmed = inputEl.value.trim();
-          sendBtn.disabled = trimmed.length === 0;
+          sendBtn.disabled = isAiProcessing || trimmed.length === 0;
+        }
+
+        function makeDeviceTask(deviceId, pendingText, successText, delayMs) {
+          return {
+            deviceId: deviceId,
+            pendingText: pendingText,
+            successText: successText,
+            delayMs: delayMs,
+          };
+        }
+
+        /** 結構化意圖 JSON（展示提示詞工程／編排） */
+        function createIntentPayload(userText, scenarioId, actionQueue, extras) {
+          extras = extras || {};
+          return {
+            version: '1.0',
+            engine: 'Gemini-2.0-Flash-Intent',
+            generated_at: new Date().toISOString(),
+            scenario_id: scenarioId,
+            user_utterance: userText,
+            confidence: extras.confidence != null ? extras.confidence : 0.91,
+            slots: extras.slots || {},
+            safety_policy: extras.safety_policy || {
+              vision_pre_check: false,
+              block_on_occupancy: false,
+            },
+            action_queue: actionQueue,
+            orchestration: extras.orchestration || { mode: 'sequential', retry: 0 },
+            natural_language_reply: extras.managerText || '',
+          };
+        }
+
+        function wrapPlan(userText, scenarioId, managerText, tasks, extras) {
+          var queue = (extras && extras.action_queue) || [];
+          if (!queue.length && tasks && tasks.length) {
+            for (var qi = 0; qi < tasks.length; qi++) {
+              queue.push({
+                order: qi + 1,
+                device_id: tasks[qi].deviceId,
+                verb: 'EXECUTE',
+                safety_clearance: 'not_required',
+              });
+            }
+          }
+          return {
+            scenario: scenarioId,
+            managerText: managerText,
+            tasks: tasks || [],
+            exception: !!(extras && extras.exception),
+            intentPayload: createIntentPayload(userText, scenarioId, queue, {
+              managerText: managerText,
+              confidence: extras && extras.confidence,
+              slots: extras && extras.slots,
+              safety_policy: extras && extras.safety_policy,
+              orchestration: extras && extras.orchestration,
+            }),
+            abortPayload: extras && extras.abortPayload,
+          };
+        }
+
+        /** 模擬 Gemini 意圖拆解 → 任務清單（Demo） */
+        function buildIntentPlan(userText) {
+          var narrow = userText.replace(/\s/g, '');
+          var managerParts = [];
+          var tasks = [];
+
+          if (
+            /紫外線|消毒|UV|殺菌/.test(narrow) &&
+            (/空調|冷氣|關/.test(narrow) || /關閉/.test(narrow))
+          ) {
+            var exMgr =
+              '已拆解指令：① 關閉客廳冷氣 ② 啟動紫外線消毒（須通過視覺 Agent 安全閘）。正在下發前置掃描…';
+            return wrapPlan(userText, 'SAFETY_UV_ABORT', exMgr, [], {
+              exception: true,
+              confidence: 0.89,
+              slots: { intent: 'uv_sanitize', zone: 'living', ac: 'off' },
+              safety_policy: {
+                vision_pre_check: true,
+                block_on_occupancy: true,
+              },
+              orchestration: { mode: 'safety_gated', retry: 0 },
+              action_queue: [
+                { order: 1, device_id: 'd-ac-living', verb: 'POWER_OFF', safety_clearance: 'not_required' },
+                {
+                  order: 2,
+                  device_id: 'd-cam-living',
+                  verb: 'VISION_SCAN',
+                  params: { zone: 'living', model: 'occupancy-v1' },
+                  safety_clearance: 'required',
+                },
+                {
+                  order: 3,
+                  device_id: UV_DEMO_DEVICE_ID,
+                  verb: 'UV_START',
+                  safety_clearance: 'blocked_pending_vision',
+                  status: 'QUEUED',
+                },
+              ],
+              abortPayload: {
+                version: '1.0',
+                engine: 'Manager-Safety-Orchestrator',
+                event: 'ACTION_ABORTED',
+                reason_code: 'OCCUPANCY_DETECTED',
+                blocked_action: { device_id: UV_DEMO_DEVICE_ID, verb: 'UV_START' },
+                vision_report: {
+                  agent: 'd-cam-living',
+                  occupancy: true,
+                  zone: 'living',
+                  confidence: 0.97,
+                },
+                retained_actions: [{ device_id: 'd-ac-living', verb: 'POWER_OFF', state: 'COMPLETED' }],
+              },
+            });
+          }
+
+          if (/狗|抓門|尿|開大門|大門/.test(narrow)) {
+            managerParts.push('收到。① 客廳攝影機監看門口 ② 大門準備解鎖待命');
+            tasks.push(
+              makeDeviceTask(
+                'd-cam-living',
+                '⏳ 執行中… 門口感應分析',
+                '✅ 執行完畢：門口目前無異常移動',
+                2200
+              )
+            );
+            tasks.push(
+              makeDeviceTask(
+                'd-gate-main',
+                '⏳ 執行中… 大門解鎖程序',
+                '✅ 執行完畢：大門已待命可開啟',
+                3400
+              )
+            );
+            return wrapPlan(userText, 'DOG_DOOR', managerParts.join('。'), tasks, {
+              confidence: 0.93,
+              slots: { intent: 'pet_door', trigger: 'scratching' },
+            });
+          }
+
+          if (/夜間|防護|就寢|睡覺|晚安/.test(narrow)) {
+            managerParts.push('已啟動夜間防護：上鎖房門並調暗照明');
+            tasks.push(
+              makeDeviceTask(
+                'd-door-master',
+                '⏳ 執行中… 主臥門上鎖',
+                '✅ 執行完畢：主臥門已上鎖',
+                2000
+              )
+            );
+            tasks.push(
+              makeDeviceTask(
+                'd-light-living',
+                '⏳ 執行中… 調暗客廳燈光',
+                '✅ 執行完畢：客廳燈光已調暗',
+                3000
+              )
+            );
+            tasks.push(
+              makeDeviceTask(
+                'd-cam-living',
+                '⏳ 執行中… 啟動動態偵測',
+                '✅ 執行完畢：夜間監控已啟用',
+                3800
+              )
+            );
+            return wrapPlan(userText, 'NIGHT_GUARD', managerParts.join('。'), tasks, {
+              confidence: 0.92,
+              slots: { intent: 'night_mode' },
+            });
+          }
+
+          var fuzzy = applyFuzzyHomeCommand(userText);
+          if (/悶|好熱|有點熱|太熱|熱/.test(narrow)) {
+            managerParts.push('了解，正為您調整環境舒適度（降溫／加強循環）');
+            if (fuzzy) managerParts.push(fuzzy);
+            tasks.push(
+              makeDeviceTask(
+                'd-fan-living',
+                '⏳ 執行中… 調整風扇',
+                '✅ 執行完畢：客廳電風扇已調整',
+                2400
+              )
+            );
+            tasks.push(
+              makeDeviceTask(
+                'd-ac-living',
+                '⏳ 執行中… 調整冷氣',
+                '✅ 執行完畢：客廳冷氣已調整',
+                3600
+              )
+            );
+            return wrapPlan(userText, 'COMFORT_COOL', managerParts.join('。'), tasks, {
+              confidence: 0.9,
+              slots: { intent: 'thermal_comfort', feel: 'hot' },
+            });
+          }
+
+          if (fuzzy) {
+            managerParts.push('已依您的感受調整環境');
+            managerParts.push(fuzzy);
+            if (/主臥|臥室/.test(narrow)) {
+              tasks.push(
+                makeDeviceTask(
+                  'd-ac-master',
+                  '⏳ 執行中… 調整主臥冷氣',
+                  '✅ 執行完畢：主臥冷氣已調整',
+                  2600
+                )
+              );
+            }
+            if (/客廳/.test(narrow) || tasks.length === 0) {
+              tasks.push(
+                makeDeviceTask(
+                  'd-fan-living',
+                  '⏳ 執行中… 調整風扇',
+                  '✅ 執行完畢：客廳電風扇已調整',
+                  2800
+                )
+              );
+            }
+            return wrapPlan(userText, 'COMFORT_ADJUST', managerParts.join('。'), tasks, {
+              confidence: 0.88,
+              slots: { intent: 'thermal_comfort', feel: 'cold' },
+            });
+          }
+
+          managerParts.push('已收到指令，正在協調相關設備執行。');
+          tasks.push(
+            makeDeviceTask(
+              'd-cam-living',
+              '⏳ 執行中… 情境分析',
+              '✅ 執行完畢：分析完成，待命後續指令',
+              2500
+            )
+          );
+          return wrapPlan(userText, 'GENERIC', managerParts.join('。'), tasks, {
+            confidence: 0.85,
+            slots: { intent: 'generic' },
+          });
+        }
+
+        function pushDeviceAgentMessage(deviceId, senderName, fields) {
+          var msg = {
+            id: newId(),
+            senderId: deviceId,
+            senderName: senderName || '設備 Agent',
+            role: 'device',
+            text: fields.text || '',
+            status: fields.status || 'pending',
+            createdAtMs: Date.now(),
+          };
+          pushChatMessage(MAIN_GROUP_ID, msg);
+          renderAll();
+          renderChatList();
+          return msg.id;
+        }
+
+        /** 異常攔截劇本：視覺 Agent 回報人員滯留 → 中止消毒 */
+        function runExceptionDemo(plan) {
+          var acId;
+          var camId;
+          var uvId;
+
+          setTimeout(function () {
+            appliancePower['d-ac-living'] = false;
+            refreshDevicePreview(getDevice('d-ac-living'));
+            acId = pushDeviceAgentMessage('d-ac-living', '客廳冷氣', {
+              text: '⏳ 執行中… 關閉冷氣',
+              status: 'pending',
+            });
+          }, 400);
+
+          setTimeout(function () {
+            updateMessageFields(MAIN_GROUP_ID, acId, {
+              status: 'success',
+              text: '✅ 執行完畢：客廳冷氣已關閉',
+            });
+            renderAll();
+            renderChatList();
+          }, 2200);
+
+          setTimeout(function () {
+            camId = pushDeviceAgentMessage('d-cam-living', '客廳攝影機（視覺 Agent）', {
+              text: '⏳ 執行中… 區域人員掃描（Vision Agent）',
+              status: 'pending',
+            });
+          }, 2600);
+
+          setTimeout(function () {
+            uvId = pushDeviceAgentMessage(UV_DEMO_DEVICE_ID, '紫外線消毒模組', {
+              text: '⏳ 執行中… 待命啟動消毒',
+              status: 'pending',
+            });
+          }, 3200);
+
+          setTimeout(function () {
+            updateMessageFields(MAIN_GROUP_ID, camId, {
+              status: 'warning',
+              text: '⚠️ 掃描結果：仍偵測到人員滯留（客廳）',
+            });
+            renderAll();
+            renderChatList();
+          }, 4800);
+
+          setTimeout(function () {
+            updateMessageFields(MAIN_GROUP_ID, uvId, {
+              status: 'cancelled',
+              text: '⛔ 指令已中止（安全閘未通過）',
+            });
+            renderAll();
+            renderChatList();
+          }, 5100);
+
+          setTimeout(function () {
+            pushChatMessage(MAIN_GROUP_ID, {
+              id: newId(),
+              senderId: 'a-manager',
+              senderName: 'Manager AI',
+              role: 'manager',
+              msgKind: 'alert',
+              text:
+                '🚨 安全中斷：視覺 Agent 回報客廳仍有人員滯留，已攔截紫外線消毒指令。客廳冷氣維持關閉。',
+              intentPayload: plan.abortPayload || plan.intentPayload,
+              showJson: false,
+              createdAtMs: Date.now(),
+            });
+            renderAll();
+            renderChatList();
+            if (bottomPanelMode === 'feed') renderApplianceSwitches();
+            setComposerBusy(false);
+            inputEl.focus();
+          }, 5400);
+        }
+
+        function scheduleDeviceTaskCompletion(threadId, msgId, task) {
+          setTimeout(function () {
+            updateMessageFields(threadId, msgId, {
+              status: 'success',
+              text: task.successText,
+            });
+            renderAll();
+            renderChatList();
+            if (bottomPanelMode === 'feed') renderApplianceSwitches();
+          }, task.delayMs);
+        }
+
+        function runMainGroupPipeline(userText) {
+          setComposerBusy(true);
+          var typingId = newId();
+          pushChatMessage(MAIN_GROUP_ID, {
+            id: typingId,
+            senderId: 'a-manager',
+            senderName: 'Manager AI',
+            role: 'manager',
+            msgKind: 'typing',
+            text: '',
+            createdAtMs: Date.now(),
+          });
+          renderAll();
+          renderChatList();
+
+          var thinkMs = 2000 + Math.floor(Math.random() * 2500);
+          setTimeout(function () {
+            removeMessageById(MAIN_GROUP_ID, typingId);
+            var plan = buildIntentPlan(userText);
+
+            pushChatMessage(MAIN_GROUP_ID, {
+              id: newId(),
+              senderId: 'a-manager',
+              senderName: 'Manager AI',
+              role: 'manager',
+              text: plan.managerText,
+              intentPayload: plan.intentPayload,
+              showJson: false,
+              createdAtMs: Date.now(),
+            });
+
+            renderAll();
+            renderChatList();
+
+            if (plan.exception) {
+              runExceptionDemo(plan);
+              return;
+            }
+
+            for (var ti = 0; ti < plan.tasks.length; ti++) {
+              var task = plan.tasks[ti];
+              var dev = getDevice(task.deviceId);
+              if (!dev || !dev.owned) continue;
+              var taskMsgId = newId();
+              pushChatMessage(MAIN_GROUP_ID, {
+                id: taskMsgId,
+                senderId: task.deviceId,
+                senderName: dev.name,
+                role: 'device',
+                status: 'pending',
+                text: task.pendingText,
+                createdAtMs: Date.now() + ti,
+              });
+              scheduleDeviceTaskCompletion(MAIN_GROUP_ID, taskMsgId, task);
+            }
+
+            renderAll();
+            renderChatList();
+            if (bottomPanelMode === 'feed') renderApplianceSwitches();
+            setComposerBusy(false);
+            inputEl.focus();
+          }, thinkMs);
+        }
+
+        function sendQuickDemo(text) {
+          if (isAiProcessing) return;
+          if (currentThreadId !== MAIN_GROUP_ID) {
+            openChatThread(MAIN_GROUP_ID);
+          }
+          showView('chat');
+          inputEl.value = text;
+          syncSendDisabled();
+          trySend();
+        }
+
+        function initComposerQuickChips() {
+          if (!composerQuickEl || composerQuickEl.getAttribute('data-built') === '1') return;
+          composerQuickEl.setAttribute('data-built', '1');
+          for (var qi = 0; qi < QUICK_DEMO_CHIPS.length; qi++) {
+            (function (chip) {
+              var btn = document.createElement('button');
+              btn.type = 'button';
+              btn.className = 'composer-quick__chip';
+              if (chip.variant === 'alert') btn.classList.add('composer-quick__chip--alert');
+              btn.textContent = chip.label;
+              btn.addEventListener('click', function () {
+                sendQuickDemo(chip.text);
+              });
+              composerQuickEl.appendChild(btn);
+            })(QUICK_DEMO_CHIPS[qi]);
+          }
+        }
+
+        function initVoiceInput() {
+          if (!voiceBtn) return;
+          var SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+          if (!SpeechRecognition) {
+            voiceBtn.title = '此瀏覽器不支援語音輸入';
+            voiceBtn.addEventListener('click', function () {
+              window.alert('請使用 Chrome 或 Safari 以啟用語音輸入。');
+            });
+            return;
+          }
+          speechRecognition = new SpeechRecognition();
+          speechRecognition.lang = 'zh-TW';
+          speechRecognition.continuous = false;
+          speechRecognition.interimResults = true;
+
+          speechRecognition.onresult = function (ev) {
+            var transcript = '';
+            for (var ri = 0; ri < ev.results.length; ri++) {
+              transcript += ev.results[ri][0].transcript;
+            }
+            inputEl.value = transcript.trim();
+            syncSendDisabled();
+          };
+
+          speechRecognition.onerror = function () {
+            isListening = false;
+            voiceBtn.classList.remove('is-listening');
+          };
+
+          speechRecognition.onend = function () {
+            isListening = false;
+            voiceBtn.classList.remove('is-listening');
+          };
+
+          voiceBtn.addEventListener('click', function () {
+            if (isAiProcessing) return;
+            if (isListening) {
+              speechRecognition.stop();
+              return;
+            }
+            try {
+              speechRecognition.start();
+              isListening = true;
+              voiceBtn.classList.add('is-listening');
+            } catch (err) {
+              isListening = false;
+              voiceBtn.classList.remove('is-listening');
+            }
+          });
         }
 
         /**
@@ -2844,8 +3699,9 @@
 
         function trySend() {
           var t = inputEl.value.trim();
-          if (!t) return;
-          ensureThread(currentThreadId).push({
+          if (!t || isAiProcessing) return;
+
+          pushChatMessage(currentThreadId, {
             id: newId(),
             senderId: OWNER_ID,
             senderName: '主人',
@@ -2853,25 +3709,19 @@
             text: t,
             createdAtMs: Date.now(),
           });
-          if (currentThreadId === MAIN_GROUP_ID) {
-            var fuzzyText = applyFuzzyHomeCommand(t);
-            if (fuzzyText) {
-              ensureThread(MAIN_GROUP_ID).push({
-                id: newId(),
-                senderId: 'a-manager',
-                senderName: 'Manager AI',
-                role: 'manager',
-                text: fuzzyText,
-                createdAtMs: Date.now(),
-              });
-            }
-          }
           inputEl.value = '';
           syncSendDisabled();
+
+          if (currentThreadId === MAIN_GROUP_ID) {
+            renderAll();
+            renderChatList();
+            runMainGroupPipeline(t);
+            return;
+          }
+
           inputEl.focus();
           renderAll();
           renderChatList();
-          if (bottomPanelMode === 'feed') renderApplianceSwitches();
         }
 
         inputEl.addEventListener('input', syncSendDisabled);
@@ -2905,6 +3755,8 @@
         tickStatusBar();
         setInterval(tickStatusBar, 15000);
 
+        initComposerQuickChips();
+        initVoiceInput();
         setLnTab(activeTab);
         setBottomPanel('list');
         renderAll();
