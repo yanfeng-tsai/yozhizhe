@@ -191,6 +191,531 @@
         display: none;
       }
 
+      .phone-screen--mihome .phone-statusbar {
+        background: transparent;
+        color: #fff;
+      }
+
+      .phone-screen--mihome .phone-statusbar__icons {
+        color: rgba(255, 255, 255, 0.95);
+      }
+
+      /* ========== 米家風首頁 ========== */
+      .mihome {
+        flex: 1;
+        min-height: 0;
+        display: none;
+        flex-direction: column;
+        position: relative;
+        background: linear-gradient(180deg, #7ec0fa 0%, #5aa8ef 38%, #4b96e3 100%);
+        color: #fff;
+      }
+
+      .mihome.is-panel-active {
+        display: flex;
+      }
+
+      .mihome-header {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 6px 14px 4px;
+        gap: 10px;
+      }
+
+      .mihome-home-select {
+        border: none;
+        background: transparent;
+        color: #fff;
+        font-size: 22px;
+        font-weight: 700;
+        padding: 6px 0;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        max-width: 70%;
+        text-align: left;
+      }
+
+      .mihome-home-select__caret {
+        font-size: 12px;
+        opacity: 0.85;
+      }
+
+      .mihome-header__actions {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .mihome-icon-btn {
+        width: 40px;
+        height: 40px;
+        border: none;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.22);
+        color: #fff;
+        font-size: 18px;
+        cursor: pointer;
+        display: grid;
+        place-items: center;
+      }
+
+      .mihome-icon-btn:hover {
+        background: rgba(255, 255, 255, 0.32);
+      }
+
+      .mihome-icon-btn--add {
+        font-size: 26px;
+        font-weight: 300;
+        line-height: 1;
+      }
+
+      .mihome-rooms {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        padding: 0 10px 10px;
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .mihome-rooms::-webkit-scrollbar {
+        display: none;
+      }
+
+      .mihome-room-tab {
+        flex: 0 0 auto;
+        border: none;
+        background: transparent;
+        color: rgba(255, 255, 255, 0.75);
+        font-size: 15px;
+        font-weight: 600;
+        padding: 8px 12px 10px;
+        cursor: pointer;
+        position: relative;
+        white-space: nowrap;
+      }
+
+      .mihome-room-tab.is-active {
+        color: #fff;
+      }
+
+      .mihome-room-tab.is-active::after {
+        content: '';
+        position: absolute;
+        left: 12px;
+        right: 12px;
+        bottom: 2px;
+        height: 3px;
+        border-radius: 2px;
+        background: #fff;
+      }
+
+      .mihome-room-tab--menu {
+        font-size: 18px;
+        padding-left: 8px;
+        padding-right: 8px;
+      }
+
+      .mihome-scroll {
+        flex: 1;
+        overflow-y: auto;
+        min-height: 0;
+        padding: 0 14px calc(16px + env(safe-area-inset-bottom));
+      }
+
+      .mihome-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        align-content: start;
+      }
+
+      .mihome-card {
+        border: 1px solid rgba(255, 255, 255, 0.35);
+        background: rgba(255, 255, 255, 0.26);
+        backdrop-filter: blur(14px);
+        -webkit-backdrop-filter: blur(14px);
+        border-radius: 18px;
+        overflow: hidden;
+        box-shadow: 0 4px 16px rgba(0, 60, 120, 0.12);
+      }
+
+      .mihome-card--cam {
+        grid-column: 1 / -1;
+        min-height: 168px;
+        display: flex;
+        flex-direction: column;
+        cursor: pointer;
+      }
+
+      .mihome-card--cam:focus-visible,
+      .mihome-card--small:focus-visible {
+        outline: 2px solid #fff;
+        outline-offset: 2px;
+      }
+
+      .mihome-card__top {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 12px 12px 0;
+      }
+
+      .mihome-card__meta {
+        min-width: 0;
+      }
+
+      .mihome-card__thumb {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        background: rgba(255, 255, 255, 0.35);
+        display: grid;
+        place-items: center;
+        font-size: 20px;
+        flex-shrink: 0;
+      }
+
+      .mihome-card__name {
+        margin: 0;
+        font-size: 16px;
+        font-weight: 700;
+        line-height: 1.25;
+      }
+
+      .mihome-card__model {
+        margin: 2px 0 0;
+        font-size: 11px;
+        opacity: 0.88;
+        line-height: 1.3;
+      }
+
+      .mihome-card__enter {
+        border: none;
+        background: rgba(255, 255, 255, 0.22);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 6px 10px;
+        border-radius: 999px;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+
+      .mihome-card__enter:hover {
+        background: rgba(255, 255, 255, 0.35);
+      }
+
+      .mihome-card__preview {
+        flex: 1;
+        margin: 10px 12px 12px;
+        min-height: 100px;
+        border-radius: 14px;
+        background: linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.15) 0%,
+            rgba(0, 80, 160, 0.25) 100%
+          ),
+          rgba(0, 0, 0, 0.08);
+        display: grid;
+        place-items: center;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .mihome-card__preview::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" width="120" height="80" viewBox="0 0 120 80"><rect fill="%23ffffff10" width="120" height="80"/></svg>');
+        filter: blur(8px);
+        opacity: 0.6;
+      }
+
+      .mihome-card__play {
+        position: relative;
+        z-index: 1;
+        width: 52px;
+        height: 52px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.35);
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        display: grid;
+        place-items: center;
+        font-size: 20px;
+        padding-left: 4px;
+      }
+
+      .mihome-card--small {
+        padding: 12px;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-height: 108px;
+        cursor: pointer;
+      }
+
+      .mihome-card--small .mihome-card__row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .mihome-card__status {
+        margin: 0;
+        font-size: 11px;
+        opacity: 0.9;
+      }
+
+      .mihome-card__foot {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-top: auto;
+      }
+
+      .mihome-switch {
+        position: relative;
+        width: 46px;
+        height: 28px;
+        flex-shrink: 0;
+      }
+
+      .mihome-switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+        position: absolute;
+      }
+
+      .mihome-switch__track {
+        position: absolute;
+        inset: 0;
+        border-radius: 999px;
+        background: rgba(0, 0, 0, 0.2);
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      .mihome-switch__thumb {
+        position: absolute;
+        width: 24px;
+        height: 24px;
+        left: 2px;
+        top: 2px;
+        border-radius: 50%;
+        background: #fff;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s;
+        pointer-events: none;
+      }
+
+      .mihome-switch input:checked + .mihome-switch__track {
+        background: rgba(255, 255, 255, 0.95);
+      }
+
+      .mihome-switch input:checked + .mihome-switch__track .mihome-switch__thumb {
+        transform: translateX(18px);
+        background: #4b96e3;
+      }
+
+      .mihome-empty {
+        grid-column: 1 / -1;
+        text-align: center;
+        padding: 32px 16px;
+        font-size: 14px;
+        opacity: 0.9;
+      }
+
+      .mihome-overlay {
+        display: none;
+        position: absolute;
+        inset: 0;
+        background: rgba(0, 30, 60, 0.35);
+        z-index: 20;
+      }
+
+      .mihome-overlay.is-open {
+        display: block;
+      }
+
+      .mihome-add-menu {
+        display: none;
+        position: absolute;
+        top: 52px;
+        right: 14px;
+        z-index: 30;
+        min-width: 168px;
+        background: #fff;
+        color: var(--ln-text);
+        border-radius: 14px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+        padding: 8px 0;
+        overflow: hidden;
+      }
+
+      .mihome-add-menu.is-open {
+        display: block;
+      }
+
+      .mihome-add-menu button {
+        display: block;
+        width: 100%;
+        border: none;
+        background: none;
+        text-align: left;
+        padding: 12px 18px;
+        font-size: 15px;
+        font-weight: 500;
+        color: var(--ln-text);
+        cursor: pointer;
+      }
+
+      .mihome-add-menu button:hover {
+        background: var(--ln-bg-soft);
+      }
+
+      .mihome-sheet {
+        display: none;
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 40;
+        max-height: 72%;
+        background: #fff;
+        color: var(--ln-text);
+        border-radius: 20px 20px 0 0;
+        box-shadow: 0 -8px 40px rgba(0, 0, 0, 0.15);
+        flex-direction: column;
+      }
+
+      .mihome-sheet.is-open {
+        display: flex;
+      }
+
+      .mihome-sheet__head {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 18px 12px;
+        border-bottom: 1px solid var(--ln-divider);
+      }
+
+      .mihome-sheet__head h2 {
+        margin: 0;
+        font-size: 17px;
+        font-weight: 700;
+      }
+
+      .mihome-sheet__close {
+        border: none;
+        background: var(--ln-bg-soft);
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        font-size: 18px;
+        cursor: pointer;
+      }
+
+      .mihome-sheet__body {
+        flex: 1;
+        overflow-y: auto;
+        padding: 8px 0 24px;
+      }
+
+      .mihome-sheet-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        width: 100%;
+        border: none;
+        background: none;
+        padding: 14px 18px;
+        text-align: left;
+        cursor: pointer;
+      }
+
+      .mihome-sheet-item:hover {
+        background: var(--ln-bg-soft);
+      }
+
+      .mihome-sheet-item__icon {
+        width: 44px;
+        height: 44px;
+        border-radius: 12px;
+        background: var(--ln-bg-soft);
+        display: grid;
+        place-items: center;
+        font-size: 22px;
+      }
+
+      .mihome-sheet-item__text strong {
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      .mihome-sheet-item__text span {
+        font-size: 12px;
+        color: var(--ln-muted);
+      }
+
+      .mihome-scan {
+        display: none;
+        position: absolute;
+        inset: 0;
+        z-index: 50;
+        background: rgba(0, 0, 0, 0.85);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 24px;
+        color: #fff;
+        text-align: center;
+      }
+
+      .mihome-scan.is-open {
+        display: flex;
+      }
+
+      .mihome-scan__frame {
+        width: min(260px, 80vw);
+        aspect-ratio: 1;
+        border: 2px solid rgba(255, 255, 255, 0.6);
+        border-radius: 16px;
+        margin-bottom: 20px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .mihome-scan__line {
+        position: absolute;
+        left: 8%;
+        right: 8%;
+        height: 2px;
+        background: var(--ln-green);
+        box-shadow: 0 0 12px var(--ln-green);
+        animation: scan-line 2s ease-in-out infinite;
+      }
+
+      @keyframes scan-line {
+        0%,
+        100% {
+          top: 12%;
+        }
+        50% {
+          top: 82%;
+        }
+      }
+
       .app-tabbar {
         flex-shrink: 0;
         display: flex;
@@ -1604,7 +2129,72 @@
           <button type="button" class="ln-sidebtn" title="設定">⚙️</button>
         </aside>
 
-        <main class="ln-main is-panel-active" id="panelList">
+        <section class="mihome is-panel-active" id="panelMihome" aria-label="智慧住家首頁">
+          <header class="mihome-header">
+            <button type="button" class="mihome-home-select" id="mihomeHomeSelect" aria-haspopup="listbox">
+              智慧住家<span class="mihome-home-select__caret" aria-hidden="true">▾</span>
+            </button>
+            <div class="mihome-header__actions">
+              <button type="button" class="mihome-icon-btn" id="mihomeSearchBtn" title="搜尋裝置" aria-label="搜尋">
+                🔍
+              </button>
+              <button
+                type="button"
+                class="mihome-icon-btn mihome-icon-btn--add"
+                id="mihomeAddBtn"
+                title="新增"
+                aria-label="新增"
+                aria-expanded="false"
+                aria-controls="mihomeAddMenu"
+              >
+                +
+              </button>
+            </div>
+          </header>
+
+          <nav class="mihome-rooms" id="mihomeRoomTabs" aria-label="房間">
+            <button type="button" class="mihome-room-tab is-active" data-room="all">智慧住家</button>
+            <button type="button" class="mihome-room-tab" data-room="g-living">客廳</button>
+            <button type="button" class="mihome-room-tab" data-room="g-kitchen">廚房</button>
+            <button type="button" class="mihome-room-tab" data-room="g-master">主臥</button>
+            <button type="button" class="mihome-room-tab" data-room="g-guest">客房</button>
+            <button type="button" class="mihome-room-tab" data-room="g-study">書房</button>
+            <button type="button" class="mihome-room-tab mihome-room-tab--menu" id="mihomeRoomMenuBtn" title="管理房間">
+              ☰
+            </button>
+          </nav>
+
+          <div class="mihome-scroll">
+            <div class="mihome-grid" id="mihomeDeviceGrid" role="list"></div>
+          </div>
+
+          <div class="mihome-overlay" id="mihomeOverlay" aria-hidden="true"></div>
+
+          <div class="mihome-add-menu" id="mihomeAddMenu" role="menu" aria-label="新增選單">
+            <button type="button" role="menuitem" data-mihome-action="add-device">新增裝置</button>
+            <button type="button" role="menuitem" data-mihome-action="scan">掃一掃</button>
+            <button type="button" role="menuitem" data-mihome-action="manual">手動控制</button>
+            <button type="button" role="menuitem" data-mihome-action="auto">自動</button>
+          </div>
+
+          <div class="mihome-sheet" id="mihomeAddSheet" role="dialog" aria-labelledby="mihomeAddSheetTitle">
+            <div class="mihome-sheet__head">
+              <h2 id="mihomeAddSheetTitle">新增裝置</h2>
+              <button type="button" class="mihome-sheet__close" id="mihomeSheetClose" aria-label="關閉">×</button>
+            </div>
+            <div class="mihome-sheet__body" id="mihomeAddSheetList"></div>
+          </div>
+
+          <div class="mihome-scan" id="mihomeScan" role="dialog" aria-label="掃描 QR 碼">
+            <div class="mihome-scan__frame">
+              <span class="mihome-scan__line" aria-hidden="true"></span>
+            </div>
+            <p>請將裝置 QR 碼對準框內</p>
+            <button type="button" class="more-btn more-btn--secondary" id="mihomeScanClose">取消</button>
+          </div>
+        </section>
+
+        <main class="ln-main" id="panelList">
           <nav class="ln-tabs" aria-label="清單分類">
             <button type="button" class="ln-tab" data-tab="all">全部</button>
             <button type="button" class="ln-tab" data-tab="appliances">家電友</button>
@@ -1698,10 +2288,10 @@
         </section>
 
         <nav class="app-tabbar" aria-label="App 底部選單">
-          <button type="button" data-bottom="home" data-default-tab="all">
+          <button type="button" class="is-active" data-bottom="home" data-default-tab="all">
             <span class="app-tabbar__icon">🏠</span>首頁
           </button>
-          <button type="button" class="is-active" data-bottom="chats" data-default-tab="chats">
+          <button type="button" data-bottom="chats" data-default-tab="chats">
             <span class="app-tabbar__icon">💬</span>聊天
           </button>
           <button type="button" data-bottom="feed"><span class="app-tabbar__icon">📰</span>動態</button>
@@ -1983,9 +2573,18 @@
 
         var currentThreadId = MAIN_GROUP_ID;
 
+        var phoneScreenEl = document.querySelector('.phone-screen');
         var viewHomeEl = document.getElementById('viewHome');
         var viewChatEl = document.getElementById('viewChat');
+        var panelMihomeEl = document.getElementById('panelMihome');
         var panelListEl = document.getElementById('panelList');
+        var mihomeDeviceGridEl = document.getElementById('mihomeDeviceGrid');
+        var mihomeOverlayEl = document.getElementById('mihomeOverlay');
+        var mihomeAddMenuEl = document.getElementById('mihomeAddMenu');
+        var mihomeAddSheetEl = document.getElementById('mihomeAddSheet');
+        var mihomeAddSheetListEl = document.getElementById('mihomeAddSheetList');
+        var mihomeScanEl = document.getElementById('mihomeScan');
+        var mihomeRoom = 'all';
         var panelFeedEl = document.getElementById('panelFeed');
         var panelMoreEl = document.getElementById('panelMore');
         var applianceSwitchListEl = document.getElementById('applianceSwitchList');
@@ -2174,27 +2773,386 @@
 
         function setBottomPanel(mode) {
           bottomPanelMode = mode;
+          var showMihome = mode === 'mihome';
           var showList = mode === 'list';
+          if (panelMihomeEl) panelMihomeEl.classList.toggle('is-panel-active', showMihome);
           panelListEl.classList.toggle('is-panel-active', showList);
           panelFeedEl.classList.toggle('is-panel-active', mode === 'feed');
           panelMoreEl.classList.toggle('is-panel-active', mode === 'more');
           fabOpenChat.classList.toggle('is-hidden', !showList);
+          if (phoneScreenEl) phoneScreenEl.classList.toggle('phone-screen--mihome', showMihome);
+          closeMihomeOverlays();
 
           document.querySelectorAll('.app-tabbar button').forEach(function (btn) {
             var btm = btn.getAttribute('data-bottom');
             var act = false;
-            if (showList && (btm === 'home' || btm === 'chats')) {
-              act =
-                (listTabFromBottom === 'home' && btm === 'home') ||
-                (listTabFromBottom !== 'home' && btm === 'chats');
-            } else if (mode === 'feed' && btm === 'feed') act = true;
+            if (showMihome && btm === 'home') act = true;
+            else if (showList && btm === 'chats') act = true;
+            else if (mode === 'feed' && btm === 'feed') act = true;
             else if (mode === 'more' && btm === 'more') act = true;
             btn.classList.toggle('is-active', act);
           });
 
+          if (showMihome) renderMihomeDevices();
           if (mode === 'feed') renderApplianceSwitches();
           if (mode === 'more') initMoreBuilderOnce();
           if (showList) renderChatList();
+        }
+
+        function deviceModelLabel(a) {
+          if (!a) return '智慧居家設備';
+          var id = a.id || '';
+          if (id.indexOf('cam') !== -1) return 'Xiaomi 智慧攝影機 C300';
+          if (id.indexOf('ac') !== -1) return '智慧冷氣 Pro';
+          if (id.indexOf('fan') !== -1) return '智慧風扇 2S';
+          if (id.indexOf('light') !== -1) return '智慧燈泡';
+          if (id.indexOf('tv') !== -1) return '智慧顯示器';
+          if (id.indexOf('robo') !== -1) return '掃地機器人 X10';
+          if (id.indexOf('water') !== -1) return '智慧飲水機';
+          if (id.indexOf('gate') !== -1 || id.indexOf('door') !== -1) return '智慧門鎖';
+          return '智慧居家設備';
+        }
+
+        function roomLabelForDevice(a) {
+          if (!a || !a.spaces || !a.spaces.length) return '智慧住家';
+          var sp = getSpace(a.spaces[0]);
+          return sp && !sp.isMain ? sp.name : '智慧住家';
+        }
+
+        function getMihomeDevicesForRoom(roomId) {
+          if (roomId === 'all') {
+            var all = [];
+            for (var i = 0; i < applianceFriends.length; i++) {
+              if (applianceFriends[i].owned) all.push(applianceFriends[i]);
+            }
+            return all;
+          }
+          return devicesInSpace(roomId);
+        }
+
+        function isCameraDevice(a) {
+          return a.id.indexOf('cam') !== -1 || (a.name && a.name.indexOf('攝影') !== -1);
+        }
+
+        function createMihomeSwitch(a) {
+          var lbl = document.createElement('label');
+          lbl.className = 'mihome-switch';
+          lbl.addEventListener('click', function (e) {
+            e.stopPropagation();
+          });
+          var inp = document.createElement('input');
+          inp.type = 'checkbox';
+          inp.checked = !!appliancePower[a.id];
+          inp.disabled = !a.owned;
+          inp.setAttribute('aria-label', a.name + ' 開關');
+          inp.addEventListener('change', function (e) {
+            e.stopPropagation();
+            appliancePower[a.id] = inp.checked;
+            refreshDevicePreview(a);
+            renderChatList();
+          });
+          var track = document.createElement('span');
+          track.className = 'mihome-switch__track';
+          var thumb = document.createElement('span');
+          thumb.className = 'mihome-switch__thumb';
+          track.appendChild(thumb);
+          lbl.appendChild(inp);
+          lbl.appendChild(track);
+          return lbl;
+        }
+
+        function openMihomeDevice(a) {
+          if (!a || !a.owned) return;
+          openChatThread(a.id);
+        }
+
+        function buildMihomeCamCard(a) {
+          var card = document.createElement('article');
+          card.className = 'mihome-card mihome-card--cam';
+          card.setAttribute('role', 'listitem');
+          card.tabIndex = 0;
+
+          var top = document.createElement('div');
+          top.className = 'mihome-card__top';
+          var thumb = document.createElement('div');
+          thumb.className = 'mihome-card__thumb';
+          thumb.textContent = deviceIconForAppliance(a);
+          var meta = document.createElement('div');
+          meta.className = 'mihome-card__meta';
+          var nm = document.createElement('p');
+          nm.className = 'mihome-card__name';
+          nm.textContent = roomLabelForDevice(a);
+          var model = document.createElement('p');
+          model.className = 'mihome-card__model';
+          model.textContent = deviceModelLabel(a);
+          meta.appendChild(nm);
+          meta.appendChild(model);
+          var enter = document.createElement('button');
+          enter.type = 'button';
+          enter.className = 'mihome-card__enter';
+          enter.textContent = '進入 ›';
+          enter.addEventListener('click', function (e) {
+            e.stopPropagation();
+            openMihomeDevice(a);
+          });
+          top.appendChild(thumb);
+          top.appendChild(meta);
+          top.appendChild(enter);
+
+          var preview = document.createElement('div');
+          preview.className = 'mihome-card__preview';
+          var play = document.createElement('span');
+          play.className = 'mihome-card__play';
+          play.textContent = '▶';
+          play.setAttribute('aria-hidden', 'true');
+          preview.appendChild(play);
+
+          card.appendChild(top);
+          card.appendChild(preview);
+          card.addEventListener('click', function () {
+            openMihomeDevice(a);
+          });
+          card.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') openMihomeDevice(a);
+          });
+          return card;
+        }
+
+        function buildMihomeSmallCard(a) {
+          var card = document.createElement('article');
+          card.className = 'mihome-card mihome-card--small';
+          card.setAttribute('role', 'listitem');
+          card.tabIndex = 0;
+
+          var row = document.createElement('div');
+          row.className = 'mihome-card__row';
+          var thumb = document.createElement('div');
+          thumb.className = 'mihome-card__thumb';
+          thumb.textContent = deviceIconForAppliance(a);
+          var meta = document.createElement('div');
+          meta.className = 'mihome-card__meta';
+          var nm = document.createElement('p');
+          nm.className = 'mihome-card__name';
+          nm.textContent = a.name;
+          var st = document.createElement('p');
+          st.className = 'mihome-card__status';
+          refreshDevicePreview(a);
+          st.textContent = previewById[a.id] || a.name;
+          meta.appendChild(nm);
+          meta.appendChild(st);
+          row.appendChild(thumb);
+          row.appendChild(meta);
+
+          var foot = document.createElement('div');
+          foot.className = 'mihome-card__foot';
+          var model = document.createElement('p');
+          model.className = 'mihome-card__model';
+          model.style.margin = '0';
+          model.textContent = deviceModelLabel(a);
+          foot.appendChild(model);
+          foot.appendChild(createMihomeSwitch(a));
+
+          card.appendChild(row);
+          card.appendChild(foot);
+          card.addEventListener('click', function () {
+            openMihomeDevice(a);
+          });
+          return card;
+        }
+
+        function renderMihomeDevices() {
+          if (!mihomeDeviceGridEl) return;
+          mihomeDeviceGridEl.innerHTML = '';
+          var devices = getMihomeDevicesForRoom(mihomeRoom);
+          var cams = [];
+          var others = [];
+          for (var i = 0; i < devices.length; i++) {
+            if (isCameraDevice(devices[i])) cams.push(devices[i]);
+            else others.push(devices[i]);
+          }
+          if (!cams.length && !others.length) {
+            var empty = document.createElement('p');
+            empty.className = 'mihome-empty';
+            empty.textContent = '此房間尚無裝置，點右上角 ＋ 新增裝置';
+            mihomeDeviceGridEl.appendChild(empty);
+            return;
+          }
+          for (var ci = 0; ci < cams.length; ci++) {
+            mihomeDeviceGridEl.appendChild(buildMihomeCamCard(cams[ci]));
+          }
+          for (var oi = 0; oi < others.length; oi++) {
+            mihomeDeviceGridEl.appendChild(buildMihomeSmallCard(others[oi]));
+          }
+        }
+
+        function closeMihomeOverlays() {
+          if (mihomeAddMenuEl) mihomeAddMenuEl.classList.remove('is-open');
+          if (mihomeOverlayEl) {
+            mihomeOverlayEl.classList.remove('is-open');
+            mihomeOverlayEl.setAttribute('aria-hidden', 'true');
+          }
+          if (mihomeAddSheetEl) mihomeAddSheetEl.classList.remove('is-open');
+          if (mihomeScanEl) mihomeScanEl.classList.remove('is-open');
+          var addBtn = document.getElementById('mihomeAddBtn');
+          if (addBtn) addBtn.setAttribute('aria-expanded', 'false');
+        }
+
+        function openMihomeAddMenu() {
+          if (mihomeAddMenuEl) mihomeAddMenuEl.classList.add('is-open');
+          if (mihomeOverlayEl) {
+            mihomeOverlayEl.classList.add('is-open');
+            mihomeOverlayEl.setAttribute('aria-hidden', 'false');
+          }
+          var addBtn = document.getElementById('mihomeAddBtn');
+          if (addBtn) addBtn.setAttribute('aria-expanded', 'true');
+        }
+
+        function renderMihomeAddSheet() {
+          if (!mihomeAddSheetListEl) return;
+          mihomeAddSheetListEl.innerHTML = '';
+          var unowned = [];
+          for (var i = 0; i < applianceFriends.length; i++) {
+            if (!applianceFriends[i].owned) unowned.push(applianceFriends[i]);
+          }
+          if (!unowned.length) {
+            var p = document.createElement('p');
+            p.style.padding = '20px 18px';
+            p.style.color = 'var(--ln-muted)';
+            p.textContent = '所有示範裝置皆已加入。';
+            mihomeAddSheetListEl.appendChild(p);
+            return;
+          }
+          for (var j = 0; j < unowned.length; j++) {
+            (function (dev) {
+              var btn = document.createElement('button');
+              btn.type = 'button';
+              btn.className = 'mihome-sheet-item';
+              btn.innerHTML =
+                '<span class="mihome-sheet-item__icon">' +
+                deviceIconForAppliance(dev) +
+                '</span><span class="mihome-sheet-item__text"><strong>' +
+                dev.name +
+                '</strong><span>' +
+                deviceModelLabel(dev) +
+                '</span></span>';
+              btn.addEventListener('click', function () {
+                dev.owned = true;
+                appliancePower[dev.id] = true;
+                refreshDevicePreview(dev);
+                closeMihomeOverlays();
+                renderMihomeDevices();
+                renderChatList();
+              });
+              mihomeAddSheetListEl.appendChild(btn);
+            })(unowned[j]);
+          }
+        }
+
+        function initMihomeUi() {
+          document.querySelectorAll('.mihome-room-tab[data-room]').forEach(function (tab) {
+            tab.addEventListener('click', function () {
+              mihomeRoom = tab.getAttribute('data-room') || 'all';
+              document.querySelectorAll('.mihome-room-tab[data-room]').forEach(function (t) {
+                t.classList.toggle('is-active', t === tab);
+              });
+              renderMihomeDevices();
+            });
+          });
+
+          var roomMenuBtn = document.getElementById('mihomeRoomMenuBtn');
+          if (roomMenuBtn) {
+            roomMenuBtn.addEventListener('click', function () {
+              window.alert('房間管理（Demo）：可新增／重新命名空間群組。');
+            });
+          }
+
+          var addBtn = document.getElementById('mihomeAddBtn');
+          if (addBtn) {
+            addBtn.addEventListener('click', function (e) {
+              e.stopPropagation();
+              if (mihomeAddMenuEl && mihomeAddMenuEl.classList.contains('is-open')) {
+                closeMihomeOverlays();
+              } else {
+                openMihomeAddMenu();
+              }
+            });
+          }
+
+          if (mihomeOverlayEl) {
+            mihomeOverlayEl.addEventListener('click', closeMihomeOverlays);
+          }
+
+          if (mihomeAddMenuEl) {
+            mihomeAddMenuEl.addEventListener('click', function (e) {
+              var action = e.target.getAttribute('data-mihome-action');
+              if (!action) return;
+              closeMihomeOverlays();
+              if (action === 'add-device') {
+                renderMihomeAddSheet();
+                if (mihomeAddSheetEl) {
+                  mihomeAddSheetEl.classList.add('is-open');
+                  if (mihomeOverlayEl) {
+                    mihomeOverlayEl.classList.add('is-open');
+                    mihomeOverlayEl.setAttribute('aria-hidden', 'false');
+                  }
+                }
+              } else if (action === 'scan') {
+                if (mihomeScanEl) mihomeScanEl.classList.add('is-open');
+              } else if (action === 'manual') {
+                setBottomPanel('feed');
+              } else if (action === 'auto') {
+                setBottomPanel('more');
+              }
+            });
+          }
+
+          var sheetClose = document.getElementById('mihomeSheetClose');
+          if (sheetClose) sheetClose.addEventListener('click', closeMihomeOverlays);
+
+          var scanClose = document.getElementById('mihomeScanClose');
+          if (scanClose) scanClose.addEventListener('click', closeMihomeOverlays);
+
+          var searchBtn = document.getElementById('mihomeSearchBtn');
+          if (searchBtn) {
+            searchBtn.addEventListener('click', function () {
+              var q = window.prompt('搜尋裝置名稱', '');
+              if (q == null) return;
+              q = q.trim().toLowerCase();
+              if (!q) {
+                renderMihomeDevices();
+                return;
+              }
+              if (!mihomeDeviceGridEl) return;
+              mihomeDeviceGridEl.innerHTML = '';
+              var matched = [];
+              for (var i = 0; i < applianceFriends.length; i++) {
+                var a = applianceFriends[i];
+                if (!a.owned) continue;
+                if (a.name.toLowerCase().indexOf(q) >= 0) matched.push(a);
+              }
+              if (!matched.length) {
+                var empty = document.createElement('p');
+                empty.className = 'mihome-empty';
+                empty.textContent = '找不到「' + q + '」';
+                mihomeDeviceGridEl.appendChild(empty);
+                return;
+              }
+              for (var j = 0; j < matched.length; j++) {
+                if (isCameraDevice(matched[j])) {
+                  mihomeDeviceGridEl.appendChild(buildMihomeCamCard(matched[j]));
+                } else {
+                  mihomeDeviceGridEl.appendChild(buildMihomeSmallCard(matched[j]));
+                }
+              }
+            });
+          }
+
+          var homeSelect = document.getElementById('mihomeHomeSelect');
+          if (homeSelect) {
+            homeSelect.addEventListener('click', function () {
+              window.alert('可切換住家：智慧住家／示範宅（Demo）');
+            });
+          }
         }
 
         function feedStatusLabel(a) {
@@ -2520,7 +3478,8 @@
             scrollToBottom();
             inputEl.focus();
           } else {
-            setBottomPanel(bottomPanelMode);
+            if (listTabFromBottom === 'home') setBottomPanel('mihome');
+            else setBottomPanel(bottomPanelMode === 'mihome' ? 'mihome' : 'list');
           }
         }
 
@@ -2698,8 +3657,7 @@
             var b = btn.getAttribute('data-bottom');
             if (b === 'home') {
               listTabFromBottom = 'home';
-              setLnTab(btn.getAttribute('data-default-tab') || 'all');
-              setBottomPanel('list');
+              setBottomPanel('mihome');
             } else if (b === 'chats') {
               listTabFromBottom = 'chats';
               setLnTab(btn.getAttribute('data-default-tab') || 'chats');
@@ -3757,8 +4715,10 @@
 
         initComposerQuickChips();
         initVoiceInput();
+        initMihomeUi();
+        listTabFromBottom = 'home';
         setLnTab(activeTab);
-        setBottomPanel('list');
+        setBottomPanel('mihome');
         renderAll();
       })();
     </script>
